@@ -14,7 +14,7 @@ def _relativize_static_urls(html: str) -> str:
 def generate_static_site(
     output_dir: Path | str = "docs",
     *,
-    site_url: str = "http://localhost",
+    site_url: str = "https://bobbyludlam.com",
     clean: bool = True,
 ) -> Path:
     output_path = Path(output_dir)
@@ -60,7 +60,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--site-url",
-        default="http://localhost",
+        default="https://bobbyludlam.com",
         help="Base URL used when rendering sitemap.xml.",
     )
     parser.add_argument(

@@ -11,12 +11,13 @@ def test_homepage_renders_content() -> None:
     assert "Bobby Ludlam" in html
     assert "Open Mic Odyssey" in html
     assert "thebobbyludlam" in html
-    assert "<a href=\"https://openmicodyssey.com/\">Visit the official website</a>" in html
-    assert "<a href=\"https://www.gofundme.com/f/support-bobby-ludlams-interdimensional-safe-space\">Support the project</a>" in html
+    assert '<a href="https://openmicodyssey.com/" target="_blank" rel="noopener noreferrer">Visit the official website</a>' in html
+    assert '<a href="https://www.gofundme.com/f/support-bobby-ludlams-interdimensional-safe-space" target="_blank" rel="noopener noreferrer">Support the project</a>' in html
     assert "#biography" in html
     assert "#portfolio" in html
     assert "#contact" in html
-    assert "/static/images/bobby-ludlam-austin.jpg" in html
+    assert "/static/images/bobby-ludlam-austin-1.jpg" in html
+    assert "bobby_ludlam_austin" not in html
     assert "/static/images/safe_space_concept_03.png" in html
     assert "<!--" not in html
 

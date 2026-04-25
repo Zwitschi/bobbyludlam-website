@@ -14,11 +14,12 @@ def test_generate_static_site_writes_rendered_pages(tmp_path: Path) -> None:
 
     assert result == output_dir
     assert (result / "static" / "css" / "site.css").exists()
-    assert (result / "static" / "images" / "bobby-ludlam-austin.jpg").exists()
+    assert (result / "static" / "images" / "bobby-ludlam-austin-1.jpg").exists()
+    assert not any((result / "static" / "images").glob("*_ludlam_austin.jpg"))
     assert (result / ".nojekyll").exists()
     assert "Bobby Ludlam" in index_html
     assert "Open Mic Odyssey" in index_html
     assert 'href="static/css/site.css"' in index_html
-    assert 'src="static/images/bobby-ludlam-austin.jpg"' in index_html
+    assert 'static/images/bobby-ludlam-austin-1.jpg' in index_html
     assert "User-agent: *" in robots_txt
-    assert "<loc>http://localhost/</loc>" in sitemap_xml
+    assert "<loc>https://bobbyludlam.com/</loc>" in sitemap_xml

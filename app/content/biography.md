@@ -2,15 +2,13 @@
 
 ## Short Bio
 
-Bobby Ludlam is an Austin-based stand-up comedian, writer, artist, and creator whose work blends live comedy, documentary storytelling, visual imagination, and offbeat big-idea projects.
-
-![Bobby Ludlam in Austin](/static/images/bobby-ludlam-austin.jpg)
+Bobby Ludlam is an Austin-based stand-up comedian, writer, artist, and creator whose work blends stand-up comedy, visual imagination, and offbeat big-idea projects.
 
 ## Full Bio
 
-Bobby Ludlam is a stand-up comedian, writer, artist, and creator based in Austin, Texas. His work moves between live comedy, documentary storytelling, collaborative filmmaking, and inventive projects that pair curiosity with a dry sense of humor.
+Bobby Ludlam is a stand-up comedian, writer, artist, and creator based in Austin, Texas. His work spans stand-up comedy, film, and creative projects that combine humor, sincerity, and a fight against reality.
 
-Before Austin, Bobby lived in California and near Chicago. Across those chapters he built a public trail through comedy videos, writing, open mic appearances, and creative experiments shaped by resilience, curiosity, and an outsider's point of view.
+Before Austin, Bobby lived in California and near Chicago, working odd jobs and exploring various creative outlets. Across those chapters he built a public trail through stand-up comedy videos, writing, open mic appearances, and creative experiments, all of which contributed to his development as a performer and creator.
 
 Bobby is a main character in Open Mic Odyssey, an upcoming feature film about three friends navigating the world of open mic comedy. The project places him inside a larger story about performance, friendship, and the chaos of trying to build a creative life.
 
