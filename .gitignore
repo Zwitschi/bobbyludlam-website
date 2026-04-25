@@ -17,4 +17,4 @@ Thumbs.db
 .idea/
 .vscode/
 .github/instructions/
-build/
+build/*
