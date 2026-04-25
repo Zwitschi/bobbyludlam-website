@@ -12,7 +12,7 @@ def _relativize_static_urls(html: str) -> str:
 
 
 def generate_static_site(
-    output_dir: Path | str = "build",
+    output_dir: Path | str = "docs",
     *,
     site_url: str = "http://localhost",
     clean: bool = True,
@@ -54,7 +54,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--output",
-        default="build",
+        default="docs",
         type=Path,
         help="Directory to write the static site into.",
     )
