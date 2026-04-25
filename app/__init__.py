@@ -161,11 +161,11 @@ def _parse_markdown_content(file_path: Path) -> dict[str, object]:
 
 
 def _load_site_content(app: Flask) -> dict[str, dict[str, object]]:
-    project_root = Path(app.root_path).parent
+    content_root = Path(app.root_path) / "content"
     return {
-        "biography": _parse_markdown_content(project_root / "biography.md"),
-        "portfolio": _parse_markdown_content(project_root / "portfolio.md"),
-        "contact": _parse_markdown_content(project_root / "contact.md"),
+        "biography": _parse_markdown_content(content_root / "biography.md"),
+        "portfolio": _parse_markdown_content(content_root / "portfolio.md"),
+        "contact": _parse_markdown_content(content_root / "contact.md"),
     }
 
 
