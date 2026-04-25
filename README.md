@@ -37,13 +37,13 @@ Then open `http://127.0.0.1:5000/` in your browser.
 
 ## Generate a static site
 
-To export the rendered site into `build/`:
+To export the rendered site into `docs/`:
 
 ```powershell
 python build_static_site.py
 ```
 
-The script renders the homepage, `robots.txt`, and `sitemap.xml`, then copies the static assets into `build/static/`.
+The script renders the homepage, `robots.txt`, and `sitemap.xml`, then copies the static assets into `docs/static/`.
 
 To use a different base URL for the generated sitemap:
 
@@ -55,20 +55,20 @@ Use `--no-clean` if you want to keep existing files in the output directory.
 
 ## Deploy to GitHub Pages
 
-The repository includes a GitHub Actions workflow that builds the static site and deploys the exported `build/` directory to GitHub Pages on push to `main`.
+The repository includes a GitHub Actions workflow that builds the static site and deploys the exported `docs/` directory to GitHub Pages on push to `main`.
 
 Before enabling the deployment, make sure GitHub Pages is configured to use the `GitHub Actions` source in the repository settings.
 
 ## Project structure
 
 ```text
+.github/workflows/
 app/
     static/
     templates/
     __init__.py
+tests/
 build_static_site.py
- .github/workflows/
 run.py
 requirements.txt
-tests/
 ```
