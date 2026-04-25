@@ -10,13 +10,91 @@
     />
   </head>
   <body>
-    <main class="hero">
-      <p class="eyebrow">Bobby Website</p>
-      <h1>Welcome to Bobby's site.</h1>
-      <p class="intro">
-        A simple Flask foundation for upcoming biography, portfolio, and contact
-        sections.
-      </p>
+    <main>
+      <section class="hero">
+        <nav class="section-nav" aria-label="Section navigation">
+          <a href="#biography">Biography</a>
+          <a href="#portfolio">Portfolio</a>
+          <a href="#contact">Contact</a>
+        </nav>
+        <p class="eyebrow">Bobby Ludlam</p>
+        <h1>Story, work, and ways to connect.</h1>
+        <p class="intro">
+          Austin comedian, writer, artist, and creator working across stand-up,
+          film, and unusually sincere big ideas.
+        </p>
+      </section>
+
+      <section class="content-section" id="biography">
+        <div class="section-heading">
+          <p class="section-label">Biography</p>
+          <h2>{{ content.biography.title }}</h2>
+        </div>
+        {% for section in content.biography.sections %}
+        <article class="content-block">
+          <h3>{{ section.heading }}</h3>
+          {% for block in section.blocks %}
+          {% if block["type"] == "paragraph" %}
+          <p>{{ block["text"] }}</p>
+          {% elif block["type"] == "list" %}
+          <ul class="content-list">
+            {% for item in block["items"] %}
+            <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          {% endfor %}
+        </article>
+        {% endfor %}
+      </section>
+
+      <section class="content-section" id="portfolio">
+        <div class="section-heading">
+          <p class="section-label">Portfolio</p>
+          <h2>{{ content.portfolio.title }}</h2>
+        </div>
+        <div class="portfolio-grid">
+          {% for section in content.portfolio.sections %}
+          <article class="card">
+            <h3>{{ section.heading }}</h3>
+            {% for block in section.blocks %}
+            {% if block["type"] == "paragraph" %}
+            <p>{{ block["text"] }}</p>
+            {% elif block["type"] == "list" %}
+            <ul class="content-list compact">
+              {% for item in block["items"] %}
+              <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+            {% endfor %}
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="content-section" id="contact">
+        <div class="section-heading">
+          <p class="section-label">Contact</p>
+          <h2>{{ content.contact.title }}</h2>
+        </div>
+        {% for section in content.contact.sections %}
+        <article class="content-block">
+          <h3>{{ section.heading }}</h3>
+          {% for block in section.blocks %}
+          {% if block["type"] == "paragraph" %}
+          <p>{{ block["text"] }}</p>
+          {% elif block["type"] == "list" %}
+          <ul class="contact-list">
+            {% for item in block["items"] %}
+            <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          {% endfor %}
+        </article>
+        {% endfor %}
+      </section>
     </main>
   </body>
 </html>

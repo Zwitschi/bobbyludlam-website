@@ -3,6 +3,11 @@ body {
   font-family: Georgia, "Times New Roman", serif;
   background: linear-gradient(180deg, #f4efe5 0%, #e4d7c6 100%);
   color: #1e1b18;
+  scroll-behavior: smooth;
+}
+
+main {
+  padding-bottom: 4rem;
 }
 
 .hero {
@@ -13,6 +18,26 @@ body {
   align-content: center;
   gap: 1rem;
   padding: 2rem;
+}
+
+.section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-nav a {
+  padding: 0.45rem 0.9rem;
+  border: 1px solid rgba(30, 27, 24, 0.16);
+  background: rgba(255, 250, 244, 0.72);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.section-nav a:hover,
+.section-nav a:focus-visible {
+  background: rgba(228, 215, 198, 0.9);
 }
 
 .eyebrow {
@@ -33,4 +58,95 @@ h1 {
   max-width: 38rem;
   font-size: 1.1rem;
   line-height: 1.6;
+}
+
+.content-section {
+  max-width: 960px;
+  margin: 0 auto 2rem;
+  padding: 2rem;
+  background: rgba(255, 250, 244, 0.7);
+  border: 1px solid rgba(30, 27, 24, 0.1);
+  box-shadow: 0 18px 50px rgba(30, 27, 24, 0.08);
+  scroll-margin-top: 1.25rem;
+}
+
+.content-section p {
+  max-width: 42rem;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.content-block + .content-block {
+  margin-top: 2rem;
+}
+
+.section-heading {
+  margin-bottom: 1.5rem;
+}
+
+.section-label {
+  margin: 0 0 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.8rem;
+}
+
+h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  line-height: 1.05;
+}
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.card {
+  padding: 1.25rem;
+  background: rgba(228, 215, 198, 0.55);
+  border: 1px solid rgba(30, 27, 24, 0.08);
+}
+
+.card h3 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.card p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.content-list {
+  margin: 1rem 0 0;
+  padding-left: 1.25rem;
+  line-height: 1.8;
+}
+
+.content-list.compact {
+  margin-top: 0.75rem;
+}
+
+.content-list li + li {
+  margin-top: 0.4rem;
+}
+
+.contact-list {
+  margin: 1.25rem 0 0;
+  padding-left: 1.25rem;
+  line-height: 1.8;
+}
+
+a {
+  color: inherit;
+}
+
+@media (max-width: 640px) {
+  .hero,
+  .content-section {
+    padding: 1.5rem;
+  }
 }
