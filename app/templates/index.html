@@ -19,6 +19,23 @@
     />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Bobby Ludlam" />
+    <meta property="og:image" content="{{ url_for('static', filename='images/bobby-ludlam-austin-1.jpg', _external=True) }}" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Bobby Ludlam | Austin Comedian, Writer & Artist" />
+    <meta name="twitter:description" content="Bobby Ludlam is an Austin comedian, writer, artist, and creator working across stand-up, film, and creative projects." />
+    <meta name="twitter:image" content="{{ url_for('static', filename='images/bobby-ludlam-austin-1.jpg', _external=True) }}" />
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Bobby Ludlam",
+      "description": "Bobby Ludlam is an Austin comedian, writer, artist, and creator working across stand-up, film, and creative projects.",
+      "image": "{{ url_for('static', filename='images/bobby-ludlam-austin-1.jpg', _external=True) }}",
+      "sameAs": [
+        "https://www.instagram.com/bobby_something/"
+      ]
+    }
+    </script>
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/site.css') }}"
@@ -31,7 +48,7 @@
           {%- if segment["type"] == "text" -%}
             {{ segment["text"] }}
           {%- elif segment["type"] == "link" -%}
-            <a href="{{ segment["url"] }}">{{ segment["text"] }}</a>
+            <a href="{{ segment["url"] }}"{% if "http" in segment["url"] %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ segment["text"] }}</a>
           {%- endif -%}
         {%- endfor -%}
       {%- endmacro %}
@@ -42,12 +59,9 @@
           <a href="#portfolio">Portfolio</a>
           <a href="#contact">Contact</a>
         </nav>
-        <p class="eyebrow">Bobby Ludlam</p>
-        <h1>Story, work, and ways to connect.</h1>
-        <p class="intro">
-          Austin comedian, writer, artist, and creator working across stand-up,
-          film, and unusually sincere big ideas.
-        </p>
+        <p class="eyebrow">Story, work, and ways to connect</p>
+        <h1>Bobby Ludlam</h1>
+        <p class="intro">Austin comedian, writer, artist, and creator working across stand-up, film, and unusually sincere big ideas.</p>
       </header>
 
       <section class="content-section" id="biography">
