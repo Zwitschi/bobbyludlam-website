@@ -1,6 +1,6 @@
 # Bobby Website
 
-This repository contains the initial Flask scaffold for Bobby's website.
+This repository contains the code for a Flask website, serving as an online portfolio and contact point for Bobby Ludlam, a comedian and creative individual. The website features sections for biography, portfolio, and contact information, with content sourced from markdown files. The project also includes a static site export script.
 
 ## Current status
 
@@ -54,16 +54,9 @@ python build_static_site.py --site-url https://example.com
 
 Use `--no-clean` if you want to keep existing files in the output directory.
 
-## Deploy to GitHub Pages
-
-The repository includes a GitHub Actions workflow that builds the static site and deploys the exported `build/` directory to GitHub Pages on push to `main`.
-
-Before enabling the deployment, make sure GitHub Pages is configured to use the `GitHub Actions` source in the repository settings.
-
 ## Project structure
 
 ```text
-.github/workflows/
 app/
     content/
     static/
