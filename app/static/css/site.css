@@ -1,0 +1,36 @@
+body {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  background: linear-gradient(180deg, #f4efe5 0%, #e4d7c6 100%);
+  color: #1e1b18;
+}
+
+.hero {
+  max-width: 720px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: grid;
+  align-content: center;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.85rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2.5rem, 6vw, 4.75rem);
+  line-height: 0.95;
+}
+
+.intro {
+  margin: 0;
+  max-width: 38rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
