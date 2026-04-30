@@ -1,0 +1,316 @@
+{
+  "biography": {
+    "title": "Biography",
+    "sections": [
+      {
+        "heading": "Short Bio",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "segments": [
+              {
+                "type": "text",
+                "text": "Bobby Ludlam is an Austin-based stand-up comedian, writer, artist, and creator whose work blends stand-up comedy, visual imagination, and offbeat big-idea projects."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Full Bio",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "segments": [
+              {
+                "type": "text",
+                "text": "Bobby Ludlam is a stand-up comedian, writer, artist, and creator based in Austin, Texas. His work spans stand-up comedy, film, and creative projects that combine humor, sincerity, and a fight against reality."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "segments": [
+              {
+                "type": "text",
+                "text": "Before Austin, Bobby lived in California and near Chicago, working odd jobs and exploring various creative outlets. Across those chapters he built a public trail through stand-up comedy videos, writing, open mic appearances, and creative experiments, all of which contributed to his development as a performer and creator."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "segments": [
+              {
+                "type": "text",
+                "text": "Bobby is a main character in Open Mic Odyssey, an upcoming feature film about three friends navigating the world of open mic comedy. The project places him inside a larger story about performance, friendship, and the chaos of trying to build a creative life."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "segments": [
+              {
+                "type": "text",
+                "text": "Most recently, Bobby has been pursuing stand-up comedy so seriously that he has moved to Austin, put his name in the bucket for the first Kill Tony Monday that he could, and got pulled to perform his latest 60-second set on stage in front of a live audience and a panel of judges. He is also the creator behind Bobby Ludlam's Inter-dimensional Safe Space, a concept built around peaceful coexistence between humans, nature, extraterrestrials, cryptids, and other supposedly impossible visitors. The idea is humorous on the surface, but the core themes are sincere: curiosity, nonviolence, conservation, education, and openness to the unknown."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "sections": [
+      {
+        "heading": "Open Mic Odyssey",
+        "blocks": [
+          {
+            "type": "image",
+            "alt": "Open Mic Odyssey poster",
+            "src": "https://www.openmicodyssey.com/images/trailer_thumbnail.png"
+          },
+          {
+            "type": "paragraph",
+            "segments": [
+              {
+                "type": "text",
+                "text": "Open Mic Odyssey is an upcoming feature film centered on three friends entering the unpredictable world of open mic comedy. Public descriptions connect Bobby Ludlam with Georg Sinn and Corey Pellizzi, positioning the project around friendship, performance, and the disorder that comes with chasing comedy seriously."
+              }
+            ]
+          },
+          {
+            "type": "list",
+            "items": [
+              [
+                {
+                  "type": "text",
+                  "text": "Status: Post-production"
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": "Expected release window: 2026"
+                }
+              ],
+              [
+                {
+                  "type": "link",
+                  "text": "Visit the official website",
+                  "url": "https://openmicodyssey.com/"
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Bobby Ludlam's Inter-dimensional Safe Space",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "segments": [
+              {
+                "type": "text",
+                "text": "Bobby Ludlam's Inter-dimensional Safe Space is a creative initiative imagining a protected sanctuary for peaceful coexistence between humans, nature, extraterrestrials, Bigfoot, cryptids, and other allegedly mythical beings."
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "alt": "Inter-dimensional Safe Space concept art",
+            "src": "/static/images/safe_space_concept_03.png"
+          },
+          {
+            "type": "paragraph",
+            "segments": [
+              {
+                "type": "text",
+                "text": "The concept combines comedy, conservation language, education, and community imagination. It is presented here as an active concept and fundraiser."
+              }
+            ]
+          },
+          {
+            "type": "list",
+            "items": [
+              [
+                {
+                  "type": "text",
+                  "text": "Status: Fundraising / concept development"
+                }
+              ],
+              [
+                {
+                  "type": "link",
+                  "text": "Support the project",
+                  "url": "https://www.gofundme.com/f/support-bobby-ludlams-interdimensional-safe-space"
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Comedy",
+        "blocks": [
+          {
+            "type": "raw_html",
+            "html": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/lcNPESVxiHs\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>"
+          },
+          {
+            "type": "paragraph",
+            "segments": [
+              {
+                "type": "text",
+                "text": "Bobby has been pursuing stand-up comedy with increasing seriousness, recently moving to Austin and performing on stage for the first time at a Kill Tony Monday. He continues to develop his comedic voice through open mic appearances, video content, and creative experiments."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "segments": [
+              {
+                "type": "text",
+                "text": "Bobby has a public trail of comedy videos across various platforms, including YouTube channels that are currently inactive but contain material from different chapters of his creative journey. "
+              },
+              {
+                "type": "link",
+                "text": "See",
+                "url": "https://www.youtube.com/@ShobbyComedy"
+              },
+              {
+                "type": "text",
+                "text": " "
+              },
+              {
+                "type": "link",
+                "text": "all",
+                "url": "https://www.youtube.com/@BobbyLudlam-ql9ed"
+              },
+              {
+                "type": "text",
+                "text": " "
+              },
+              {
+                "type": "link",
+                "text": "channels",
+                "url": "https://www.youtube.com/@bobbyludlam2475"
+              },
+              {
+                "type": "text",
+                "text": " "
+              },
+              {
+                "type": "link",
+                "text": "here",
+                "url": "https://www.youtube.com/@blu301"
+              },
+              {
+                "type": "text",
+                "text": "."
+              }
+            ]
+          },
+          {
+            "type": "list",
+            "items": [
+              [
+                {
+                  "type": "link",
+                  "text": "Kill Tony Archive",
+                  "url": "https://www.killarchives.com/comedian/1231/bobby-ludlow?episode=478"
+                },
+                {
+                  "type": "text",
+                  "text": " (listed as \"Bobby Ludlow\")"
+                }
+              ],
+              [
+                {
+                  "type": "link",
+                  "text": "Big Jay Oakerson & Dan Soder Clown me",
+                  "url": "https://www.youtube.com/watch?v=KNPCEiyG8NE"
+                }
+              ]
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "contact": {
+    "title": "Contact",
+    "sections": [
+      {
+        "heading": "Get in Touch",
+        "blocks": [
+          {
+            "type": "list",
+            "items": [
+              [
+                {
+                  "type": "text",
+                  "text": "Instagram: "
+                },
+                {
+                  "type": "link",
+                  "text": "thebobbyludlam",
+                  "url": "https://www.instagram.com/thebobbyludlam/"
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Contact Bobby",
+        "blocks": [
+          {
+            "type": "list",
+            "items": [
+              [
+                {
+                  "type": "text",
+                  "text": "Book Bobby for a comedy show or live event"
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": "Ask about collaboration opportunities"
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": "Reach out about "
+                },
+                {
+                  "type": "link",
+                  "text": "Open Mic Odyssey",
+                  "url": "https://openmicodyssey.com/"
+                },
+                {
+                  "type": "text",
+                  "text": " media or partnerships"
+                }
+              ],
+              [
+                {
+                  "type": "text",
+                  "text": "Enquire about "
+                },
+                {
+                  "type": "link",
+                  "text": "Bobby Ludlam's Inter-dimensional Safe Space",
+                  "url": "https://www.gofundme.com/f/support-bobby-ludlams-interdimensional-safe-space"
+                }
+              ]
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

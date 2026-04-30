@@ -1,0 +1,1053 @@
+{% extends "_base.html" %} {% block title %}
+<title>Admin Dashboard</title>
+{% endblock %} {% block extra_head %}
+<style>
+  :root {
+    color-scheme: light;
+  }
+
+  body {
+    margin: 0;
+    padding: 1rem;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f4f6fb;
+    color: #111827;
+  }
+
+  main {
+    max-width: 980px;
+    margin: 0 auto;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .panel {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid #d6dbe8;
+    border-radius: 12px;
+    padding: 1rem;
+  }
+
+  h1,
+  h2,
+  h3 {
+    margin: 0 0 0.6rem;
+  }
+
+  p {
+    margin: 0 0 0.8rem;
+    line-height: 1.5;
+  }
+
+  ul {
+    margin: 0.5rem 0 0;
+    padding-left: 1.2rem;
+  }
+
+  li + li {
+    margin-top: 0.3rem;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 420px;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 0.92rem;
+    line-height: 1.45;
+    border: 1px solid #c7cfde;
+    border-radius: 8px;
+    padding: 0.75rem;
+    box-sizing: border-box;
+    resize: vertical;
+  }
+
+  .actions {
+    margin-top: 0.75rem;
+  }
+
+  .editor-grid {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .editor-row {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .editor-row label {
+    font-size: 0.88rem;
+    color: #334155;
+    font-weight: 600;
+  }
+
+  .editor-row select {
+    width: 100%;
+    border: 1px solid #c7cfde;
+    border-radius: 8px;
+    padding: 0.45rem 0.6rem;
+    font-size: 0.92rem;
+    background: #ffffff;
+    color: #0f172a;
+  }
+
+  .editor-row input[type="text"] {
+    width: 100%;
+    border: 1px solid #c7cfde;
+    border-radius: 8px;
+    padding: 0.45rem 0.6rem;
+    font-size: 0.92rem;
+    background: #ffffff;
+    color: #0f172a;
+    box-sizing: border-box;
+  }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .toolbar button {
+    padding: 0.45rem 0.65rem;
+    background: #334155;
+    font-size: 0.84rem;
+  }
+
+  .toolbar button:hover,
+  .toolbar button:focus-visible {
+    background: #1e293b;
+  }
+
+  .section-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .section-actions button {
+    padding: 0.45rem 0.65rem;
+    font-size: 0.84rem;
+    background: #0f766e;
+  }
+
+  .section-actions button:hover,
+  .section-actions button:focus-visible {
+    background: #0f5f58;
+  }
+
+  #rich_editor {
+    min-height: 220px;
+    border: 1px solid #c7cfde;
+    border-radius: 8px;
+    padding: 0.75rem;
+    background: #ffffff;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+
+  #rich_editor:focus {
+    outline: 2px solid #93c5fd;
+    outline-offset: 1px;
+  }
+
+  #editor_status {
+    min-height: 1.3rem;
+    font-size: 0.88rem;
+    color: #1e40af;
+  }
+
+  .image-editor {
+    display: none;
+    gap: 0.5rem;
+  }
+
+  .image-editor.active {
+    display: grid;
+  }
+
+  .image-editor img {
+    max-width: 100%;
+    max-height: 160px;
+    border-radius: 6px;
+    border: 1px solid #c7cfde;
+    object-fit: contain;
+    background: #f8fafc;
+  }
+
+  .image-editor-preview {
+    text-align: center;
+    padding: 0.5rem 0;
+  }
+
+  button {
+    border: 0;
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    font-weight: 600;
+    background: #2563eb;
+    color: #ffffff;
+    cursor: pointer;
+  }
+
+  button:hover,
+  button:focus-visible {
+    background: #1d4ed8;
+  }
+
+  .help {
+    color: #475569;
+    font-size: 0.92rem;
+  }
+
+  .message {
+    margin-top: 0.6rem;
+    padding: 0.65rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.92rem;
+  }
+
+  .message.ok {
+    background: #e7f6ee;
+    color: #166534;
+    border: 1px solid #86efac;
+  }
+
+  .message.error {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+  }
+
+  .section-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #c7cfde;
+    border-radius: 8px;
+    overflow: hidden;
+    min-height: 2.5rem;
+  }
+
+  .section-list:empty::after {
+    content: "No sections yet.";
+    display: block;
+    padding: 0.75rem;
+    color: #94a3b8;
+    font-size: 0.9rem;
+  }
+
+  .section-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.75rem;
+    background: #ffffff;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .section-item:last-child {
+    border-bottom: none;
+  }
+
+  .section-item:hover {
+    background: #f0f9ff;
+  }
+
+  .section-item.selected {
+    background: #eff6ff;
+    border-left: 3px solid #2563eb;
+    padding-left: calc(0.75rem - 3px);
+  }
+
+  .section-item.drag-over {
+    border-top: 2px solid #2563eb;
+    background: #dbeafe;
+  }
+
+  .section-item.dragging {
+    opacity: 0.4;
+  }
+
+  .drag-handle {
+    cursor: grab;
+    color: #94a3b8;
+    font-size: 1.1rem;
+    padding: 0 0.2rem;
+    flex-shrink: 0;
+  }
+
+  .drag-handle:active {
+    cursor: grabbing;
+  }
+
+  .section-item-label {
+    flex: 1;
+    font-size: 0.92rem;
+  }
+
+  .section-item-delete {
+    background: transparent;
+    color: #94a3b8;
+    padding: 0.15rem 0.35rem;
+    font-size: 0.85rem;
+    border-radius: 4px;
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .section-item-delete:hover {
+    background: #fee2e2;
+    color: #dc2626;
+  }
+
+  .preview-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.6rem;
+  }
+
+  .preview-bar p {
+    margin: 0;
+  }
+
+  #preview_frame {
+    width: 100%;
+    height: 600px;
+    border: 1px solid #c7cfde;
+    border-radius: 8px;
+    background: #ffffff;
+  }
+
+  #preview_status {
+    min-height: 1.2rem;
+    font-size: 0.88rem;
+    color: #475569;
+  }
+
+  .save-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  #unsaved_badge {
+    display: none;
+    padding: 0.25rem 0.6rem;
+    background: #fef9c3;
+    color: #92400e;
+    border: 1px solid #fde68a;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  #unsaved_badge.visible {
+    display: inline-block;
+  }
+
+  #save_status {
+    min-height: 1.2rem;
+    font-size: 0.9rem;
+  }
+</style>
+{% endblock %} {% block content %}
+<section class="panel">
+  <h1>Admin Dashboard</h1>
+  <p>Manage site content in one place. Edit JSON payload, then submit.</p>
+  {% if save_message %}
+  <p class="message {% if save_error %}error{% else %}ok{% endif %}">
+    {{ save_message }}
+  </p>
+  {% endif %}
+</section>
+
+<section class="panel">
+  <h2>Sections</h2>
+  <p class="help">
+    Drag to reorder. Click a section to select and edit its heading. Use ✕ to
+    delete.
+  </p>
+  <div class="editor-grid">
+    <div class="editor-row">
+      <label for="page_selector">Page</label>
+      <select id="page_selector"></select>
+    </div>
+
+    <ul id="section_list" class="section-list"></ul>
+
+    <div class="editor-row">
+      <label for="section_heading">Section heading</label>
+      <input id="section_heading" type="text" placeholder="Section heading" />
+    </div>
+
+    <div class="section-actions" aria-label="Section actions">
+      <button type="button" id="section_add">Add Section</button>
+      <button type="button" id="section_rename">Update Heading</button>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Rich Text Editor</h2>
+  <p class="help">
+    Select a section, edit all of its content below, then apply changes to that
+    full section.
+  </p>
+  <div class="editor-grid">
+    <div class="toolbar" aria-label="Rich text tools">
+      <button type="button" data-editor-cmd="bold">
+        <strong>Bold</strong>
+      </button>
+      <button type="button" data-editor-cmd="italic"><em>Italic</em></button>
+      <button type="button" data-editor-cmd="insertUnorderedList">
+        Bullet List
+      </button>
+      <button type="button" id="editor_link">Add Link</button>
+      <button type="button" id="editor_image">Add Image</button>
+      <button type="button" id="editor_reload">Reload Section</button>
+      <button type="button" id="editor_apply">Apply Section</button>
+    </div>
+
+    <div
+      id="rich_editor"
+      contenteditable="true"
+      role="textbox"
+      aria-multiline="true"
+      spellcheck="true"
+    ></div>
+
+    <p id="editor_status" class="help"></p>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Live Preview</h2>
+  <div class="preview-bar">
+    <p class="help">
+      Reflects current in-memory changes. Click "Refresh Preview" to update
+      after edits.
+    </p>
+    <button type="button" id="preview_refresh">Refresh Preview</button>
+  </div>
+  <p id="preview_status" class="help"></p>
+  <iframe
+    id="preview_frame"
+    title="Site preview"
+    sandbox="allow-same-origin allow-scripts"
+  ></iframe>
+</section>
+
+<section class="panel">
+  <h2>Save Content</h2>
+  <p class="help">
+    All edits are in-memory until you click Save. Invalid JSON will be rejected
+    before saving.
+  </p>
+  <script id="initial_content_json" type="application/json">
+    {{ content_json }}
+  </script>
+  <div class="save-bar">
+    <button type="button" id="save_btn">Save Content</button>
+    <span id="unsaved_badge">Unsaved changes</span>
+    <span id="save_status" class="help"></span>
+  </div>
+</section>
+{% endblock %} {% block extra_body %}
+<script>
+  (() => {
+    const initialContentJson = document.getElementById("initial_content_json");
+    const pageSelector = document.getElementById("page_selector");
+    const sectionList = document.getElementById("section_list");
+    const sectionHeading = document.getElementById("section_heading");
+    const richEditor = document.getElementById("rich_editor");
+    const status = document.getElementById("editor_status");
+    const applyButton = document.getElementById("editor_apply");
+    const reloadButton = document.getElementById("editor_reload");
+    const linkButton = document.getElementById("editor_link");
+    const imageButton = document.getElementById("editor_image");
+    const sectionAddButton = document.getElementById("section_add");
+    const sectionRenameButton = document.getElementById("section_rename");
+    const toolbarButtons = document.querySelectorAll("[data-editor-cmd]");
+    const previewRefreshButton = document.getElementById("preview_refresh");
+    const previewFrame = document.getElementById("preview_frame");
+    const previewStatus = document.getElementById("preview_status");
+    const saveBtn = document.getElementById("save_btn");
+    const unsavedBadge = document.getElementById("unsaved_badge");
+    const saveStatus = document.getElementById("save_status");
+
+    let contentData = null;
+    let savedJson = initialContentJson.textContent.trim();
+    let selectedSectionIndex = -1;
+    let dragStartIndex = -1;
+
+    const setStatus = (message, isError = false) => {
+      status.textContent = message;
+      status.style.color = isError ? "#b91c1c" : "#1e40af";
+    };
+
+    const mergeTextSegments = (segments) => {
+      const merged = [];
+      for (const segment of segments) {
+        if (
+          segment.type === "text" &&
+          merged.length > 0 &&
+          merged[merged.length - 1].type === "text"
+        ) {
+          merged[merged.length - 1].text += segment.text;
+        } else {
+          merged.push(segment);
+        }
+      }
+      return merged;
+    };
+
+    const parseInlineFromNode = (node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return [{ type: "text", text: node.nodeValue ?? "" }];
+      }
+
+      if (node.nodeType !== Node.ELEMENT_NODE) {
+        return [];
+      }
+
+      const element = node;
+      if (element.tagName === "A") {
+        return [
+          {
+            type: "link",
+            text: element.textContent ?? "",
+            url: element.getAttribute("href") ?? "",
+          },
+        ];
+      }
+
+      if (element.tagName === "BR") {
+        return [{ type: "text", text: "\n" }];
+      }
+
+      const childSegments = [];
+      for (const child of element.childNodes) {
+        childSegments.push(...parseInlineFromNode(child));
+      }
+      return childSegments;
+    };
+
+    const parseInlineFromContainer = (container) => {
+      const segments = [];
+      for (const child of container.childNodes) {
+        segments.push(...parseInlineFromNode(child));
+      }
+
+      const normalized = mergeTextSegments(segments).filter((segment) => {
+        if (segment.type === "text") {
+          return segment.text.length > 0;
+        }
+        return Boolean(segment.text || segment.url);
+      });
+
+      return normalized.length > 0 ? normalized : [{ type: "text", text: "" }];
+    };
+
+    const segmentsToHtml = (segments) => {
+      const wrapper = document.createElement("div");
+      for (const segment of segments || []) {
+        if (segment.type === "link") {
+          const anchor = document.createElement("a");
+          anchor.href = segment.url || "";
+          anchor.textContent = segment.text || segment.url || "link";
+          wrapper.appendChild(anchor);
+        } else {
+          wrapper.appendChild(document.createTextNode(segment.text || ""));
+        }
+      }
+      return wrapper.innerHTML;
+    };
+
+    const listItemsToHtml = (items) => {
+      const list = document.createElement("ul");
+      for (const item of items || []) {
+        const li = document.createElement("li");
+        li.innerHTML = segmentsToHtml(item);
+        list.appendChild(li);
+      }
+      return list.outerHTML;
+    };
+
+    const escapeAttr = (value) =>
+      String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+
+    const getSelectedSection = () => {
+      const pageName = getCurrentPageName();
+      const sections = contentData?.[pageName]?.sections || [];
+      if (selectedSectionIndex < 0 || selectedSectionIndex >= sections.length) {
+        return null;
+      }
+      return sections[selectedSectionIndex];
+    };
+
+    const sectionBlocksToHtml = (blocks) => {
+      const htmlParts = [];
+      for (const block of blocks || []) {
+        if (block.type === "paragraph") {
+          htmlParts.push(`<p>${segmentsToHtml(block.segments || [])}</p>`);
+        } else if (block.type === "list") {
+          htmlParts.push(listItemsToHtml(block.items || []));
+        } else if (block.type === "image") {
+          htmlParts.push(
+            `<p><img src="${escapeAttr(block.src)}" alt="${escapeAttr(block.alt)}"></p>`,
+          );
+        }
+      }
+      return htmlParts.join("\n") || "<p></p>";
+    };
+
+    const parseSectionBlocksFromEditor = () => {
+      const blocks = [];
+      const nodes = Array.from(richEditor.childNodes);
+
+      for (const node of nodes) {
+        if (node.nodeType === Node.TEXT_NODE) {
+          if (node.textContent && node.textContent.trim().length > 0) {
+            blocks.push({
+              type: "paragraph",
+              segments: [{ type: "text", text: node.textContent }],
+            });
+          }
+          continue;
+        }
+
+        if (node.nodeType !== Node.ELEMENT_NODE) {
+          continue;
+        }
+
+        const element = node;
+        const tag = element.tagName;
+
+        if (tag === "UL" || tag === "OL") {
+          const listItems = Array.from(element.querySelectorAll(":scope > li"));
+          blocks.push({
+            type: "list",
+            items:
+              listItems.length > 0
+                ? listItems.map((li) => parseInlineFromContainer(li))
+                : [[{ type: "text", text: "" }]],
+          });
+          continue;
+        }
+
+        if (tag === "IMG") {
+          blocks.push({
+            type: "image",
+            src: element.getAttribute("src") || "",
+            alt: element.getAttribute("alt") || "",
+          });
+          continue;
+        }
+
+        if (tag === "P" || tag === "DIV") {
+          const singleImage =
+            element.childElementCount === 1 &&
+            element.firstElementChild &&
+            element.firstElementChild.tagName === "IMG" &&
+            (element.textContent || "").trim().length === 0;
+
+          if (singleImage) {
+            const image = element.firstElementChild;
+            blocks.push({
+              type: "image",
+              src: image.getAttribute("src") || "",
+              alt: image.getAttribute("alt") || "",
+            });
+          } else {
+            blocks.push({
+              type: "paragraph",
+              segments: parseInlineFromContainer(element),
+            });
+          }
+        }
+      }
+
+      return blocks.length > 0
+        ? blocks
+        : [{ type: "paragraph", segments: [{ type: "text", text: "" }] }];
+    };
+
+    const serializeContent = () => JSON.stringify(contentData, null, 2);
+
+    const markUnsaved = () => {
+      const isDirty = serializeContent() !== savedJson;
+      unsavedBadge.classList.toggle("visible", isDirty);
+    };
+
+    const setSaveStatus = (message, isError = false) => {
+      saveStatus.textContent = message;
+      saveStatus.style.color = isError ? "#b91c1c" : "#166534";
+    };
+
+    const refreshPreview = async () => {
+      if (!contentData) return;
+      previewStatus.textContent = "Loading preview…";
+      try {
+        const resp = await fetch("/admin/preview", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(contentData),
+        });
+        if (!resp.ok) {
+          previewStatus.textContent = `Preview error: ${resp.status}`;
+          return;
+        }
+        const html = await resp.text();
+        const blob = new Blob([html], { type: "text/html" });
+        const url = URL.createObjectURL(blob);
+        const oldUrl = previewFrame.src;
+        previewFrame.src = url;
+        if (oldUrl.startsWith("blob:")) URL.revokeObjectURL(oldUrl);
+        previewStatus.textContent = "Preview updated.";
+      } catch (err) {
+        previewStatus.textContent = `Preview failed: ${err.message}`;
+      }
+    };
+
+    const saveContent = async () => {
+      let jsonText = serializeContent();
+
+      // client-side validation
+      let parsed;
+      try {
+        parsed = JSON.parse(jsonText);
+      } catch (err) {
+        setSaveStatus(`Cannot save: invalid JSON — ${err.message}`, true);
+        return;
+      }
+      if (
+        typeof parsed !== "object" ||
+        Array.isArray(parsed) ||
+        parsed === null
+      ) {
+        setSaveStatus("Cannot save: JSON root must be an object.", true);
+        return;
+      }
+
+      saveBtn.disabled = true;
+      setSaveStatus("Saving…");
+
+      try {
+        const body = new URLSearchParams({ content_json: jsonText });
+        const resp = await fetch("/admin/save", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: body.toString(),
+        });
+
+        if (resp.ok) {
+          savedJson = jsonText;
+          markUnsaved();
+          setSaveStatus("Content saved.");
+        } else {
+          const text = await resp.text();
+          // extract save_message from rendered HTML if possible
+          const match = text.match(/class="message[^"]*">([^<]+)</);
+          const msg = match ? match[1].trim() : `Server error ${resp.status}`;
+          setSaveStatus(`Save failed: ${msg}`, true);
+        }
+      } catch (err) {
+        setSaveStatus(`Save failed: ${err.message}`, true);
+      } finally {
+        saveBtn.disabled = false;
+      }
+    };
+
+    const getCurrentPageName = () => pageSelector.value;
+
+    const getCurrentSections = () => {
+      const pageName = getCurrentPageName();
+      return contentData?.[pageName]?.sections || [];
+    };
+
+    const getCurrentSectionIndex = () => selectedSectionIndex;
+
+    const refreshPageSelector = () => {
+      const previous = pageSelector.value;
+      pageSelector.innerHTML = "";
+
+      Object.keys(contentData || {}).forEach((pageName) => {
+        const option = document.createElement("option");
+        option.value = pageName;
+        option.textContent = pageName;
+        pageSelector.appendChild(option);
+      });
+
+      if (previous && contentData?.[previous]) {
+        pageSelector.value = previous;
+      }
+    };
+
+    const refreshSectionList = () => {
+      const sections = getCurrentSections();
+
+      if (selectedSectionIndex < 0 && sections.length > 0) {
+        selectedSectionIndex = 0;
+      }
+      if (selectedSectionIndex >= sections.length) {
+        selectedSectionIndex = sections.length - 1;
+      }
+
+      sectionList.innerHTML = "";
+      sections.forEach((section, index) => {
+        const li = document.createElement("li");
+        li.className =
+          "section-item" + (index === selectedSectionIndex ? " selected" : "");
+        li.draggable = true;
+
+        const handle = document.createElement("span");
+        handle.className = "drag-handle";
+        handle.setAttribute("aria-hidden", "true");
+        handle.textContent = "⠿";
+
+        const label = document.createElement("span");
+        label.className = "section-item-label";
+        label.textContent = `${index + 1}. ${
+          section.heading || "Untitled section"
+        }`;
+
+        const del = document.createElement("button");
+        del.type = "button";
+        del.className = "section-item-delete";
+        del.textContent = "✕";
+        del.title = "Delete section";
+        del.addEventListener("click", (e) => {
+          e.stopPropagation();
+          deleteSection(index);
+        });
+
+        li.appendChild(handle);
+        li.appendChild(label);
+        li.appendChild(del);
+
+        li.addEventListener("click", () => {
+          selectedSectionIndex = index;
+          sectionHeading.value = sections[index]?.heading || "";
+          sectionList.querySelectorAll(".section-item").forEach((el, i) => {
+            el.classList.toggle("selected", i === index);
+          });
+          renderSelectedSection();
+        });
+
+        li.addEventListener("dragstart", (e) => {
+          dragStartIndex = index;
+          e.dataTransfer.effectAllowed = "move";
+          setTimeout(() => li.classList.add("dragging"), 0);
+        });
+        li.addEventListener("dragend", () => {
+          li.classList.remove("dragging");
+          sectionList
+            .querySelectorAll(".section-item.drag-over")
+            .forEach((el) => el.classList.remove("drag-over"));
+        });
+        li.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "move";
+          if (dragStartIndex !== index) {
+            sectionList
+              .querySelectorAll(".section-item.drag-over")
+              .forEach((el) => el.classList.remove("drag-over"));
+            li.classList.add("drag-over");
+          }
+        });
+        li.addEventListener("dragleave", () => {
+          li.classList.remove("drag-over");
+        });
+        li.addEventListener("drop", (e) => {
+          e.preventDefault();
+          li.classList.remove("drag-over");
+          if (dragStartIndex < 0 || dragStartIndex === index) return;
+          const pageName = getCurrentPageName();
+          const pageSections = contentData[pageName].sections;
+          const [moved] = pageSections.splice(dragStartIndex, 1);
+          pageSections.splice(index, 0, moved);
+          selectedSectionIndex = index;
+          dragStartIndex = -1;
+          applySectionChanges("Section order updated.");
+        });
+
+        sectionList.appendChild(li);
+      });
+
+      sectionHeading.value =
+        selectedSectionIndex >= 0
+          ? sections[selectedSectionIndex]?.heading || ""
+          : "";
+    };
+
+    const deleteSection = (index) => {
+      const sections = getCurrentSections();
+      const heading = sections[index]?.heading || "Untitled section";
+      if (!window.confirm(`Delete section "${heading}"?`)) return;
+      sections.splice(index, 1);
+      if (selectedSectionIndex >= sections.length) {
+        selectedSectionIndex = sections.length - 1;
+      }
+      applySectionChanges(`Section "${heading}" deleted.`);
+    };
+
+    const renderSelectedSection = () => {
+      const section = getSelectedSection();
+      if (!section) {
+        richEditor.innerHTML = "";
+        setStatus("Select a section to edit its full content.", true);
+        return;
+      }
+
+      richEditor.innerHTML = sectionBlocksToHtml(section.blocks || []);
+      setStatus(
+        `Editing full section: ${section.heading || "Untitled section"}`,
+      );
+    };
+
+    const loadFromJson = () => {
+      try {
+        contentData = JSON.parse(savedJson);
+      } catch (err) {
+        setStatus("Cannot load editor: invalid JSON payload.", true);
+        return;
+      }
+
+      refreshPageSelector();
+      selectedSectionIndex = -1;
+      refreshSectionList();
+      renderSelectedSection();
+      markUnsaved();
+    };
+
+    const applySectionChanges = (message) => {
+      markUnsaved();
+      refreshSectionList();
+      renderSelectedSection();
+      setStatus(message);
+      refreshPreview();
+    };
+
+    const addSection = () => {
+      const pageName = getCurrentPageName();
+      if (!pageName || !contentData?.[pageName]) {
+        setStatus("Select page before adding section.", true);
+        return;
+      }
+
+      const newHeading = sectionHeading.value.trim() || "New Section";
+      contentData[pageName].sections = contentData[pageName].sections || [];
+      contentData[pageName].sections.push({
+        heading: newHeading,
+        blocks: [
+          {
+            type: "paragraph",
+            segments: [{ type: "text", text: "" }],
+          },
+        ],
+      });
+      selectedSectionIndex = contentData[pageName].sections.length - 1;
+      applySectionChanges(`Section '${newHeading}' added.`);
+    };
+
+    const renameSection = () => {
+      const sections = getCurrentSections();
+      const idx = getCurrentSectionIndex();
+      if (idx < 0 || idx >= sections.length) {
+        setStatus("Select section to rename.", true);
+        return;
+      }
+
+      const heading = sectionHeading.value.trim();
+      if (!heading) {
+        setStatus("Section heading cannot be empty.", true);
+        return;
+      }
+
+      sections[idx].heading = heading;
+      applySectionChanges(`Section renamed to '${heading}'.`);
+    };
+
+    const applyEditorToJson = () => {
+      const section = getSelectedSection();
+      if (!section) {
+        setStatus("Select a section first.", true);
+        return;
+      }
+
+      section.blocks = parseSectionBlocksFromEditor();
+
+      markUnsaved();
+      setStatus("Applied full section changes to JSON payload.");
+      refreshPreview();
+    };
+
+    toolbarButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const command = button.getAttribute("data-editor-cmd");
+        if (!command) {
+          return;
+        }
+        richEditor.focus();
+        document.execCommand(command, false);
+      });
+    });
+
+    linkButton.addEventListener("click", () => {
+      const url = window.prompt("Link URL:", "https://");
+      if (!url) {
+        return;
+      }
+      richEditor.focus();
+      document.execCommand("createLink", false, url);
+    });
+
+    imageButton.addEventListener("click", () => {
+      const src = window.prompt("Image URL:", "https://");
+      if (!src) {
+        return;
+      }
+      const alt = window.prompt("Image alt text:", "") || "";
+      richEditor.focus();
+      document.execCommand(
+        "insertHTML",
+        false,
+        `<p><img src="${escapeAttr(src)}" alt="${escapeAttr(alt)}"></p>`,
+      );
+    });
+
+    pageSelector.addEventListener("change", () => {
+      selectedSectionIndex = -1;
+      refreshSectionList();
+      renderSelectedSection();
+      setStatus(`Page switched to '${getCurrentPageName()}'.`);
+    });
+    reloadButton.addEventListener("click", loadFromJson);
+    applyButton.addEventListener("click", applyEditorToJson);
+    sectionAddButton.addEventListener("click", addSection);
+    sectionRenameButton.addEventListener("click", renameSection);
+    previewRefreshButton.addEventListener("click", refreshPreview);
+    saveBtn.addEventListener("click", saveContent);
+
+    window.addEventListener("beforeunload", (e) => {
+      if (unsavedBadge.classList.contains("visible")) {
+        e.preventDefault();
+      }
+    });
+
+    loadFromJson();
+    refreshPreview();
+  })();
+</script>
+{% endblock %} {% block footer %}{% endblock %}

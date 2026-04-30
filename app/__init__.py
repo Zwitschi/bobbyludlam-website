@@ -1,190 +1,74 @@
+import json
+import os
 from pathlib import Path
-from typing import Any
-from urllib.parse import quote, urlparse
 
-import re
-
-from flask import Flask, Response, render_template, request
+from flask import Flask, Response, render_template, request, url_for
+ALLOW_ROBOTS = True
 
 
-MARKDOWN_COMMENT_PATTERN = re.compile(r"<!--.*?-->", re.DOTALL)
-MARKDOWN_INLINE_PATTERN = re.compile(r"(!?)\[([^\]]*)\]\(([^)]*)\)")
+def _site_content_path(app: Flask) -> Path:
+    return Path(app.root_path) / "content" / "siteContent.json"
 
 
-def _placeholder_image_src(label: str) -> str:
-    safe_label = label or "Image coming soon"
-    svg = (
-        '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" '
-        'viewBox="0 0 1200 675">'
-        '<rect width="100%" height="100%" fill="#0c1020"/>'
-        '<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" '
-        'fill="#1e1b18" font-size="42" '
-        'font-family="Georgia, Times New Roman, serif">'
-        f"{safe_label}"
-        "</text></svg>"
-    )
-    return f"data:image/svg+xml;charset=UTF-8,{quote(svg)}"
-
-
-def _is_valid_image_src(src: str) -> bool:
-    if not src:
-        return False
-
-    parsed = urlparse(src)
-    return bool(parsed.scheme in {"http", "https", "data"} or src.startswith("/"))
-
-
-def _parse_inline_markdown(text: str) -> list[dict[str, str]]:
-    segments: list[dict[str, str]] = []
-    cursor = 0
-
-    for match in MARKDOWN_INLINE_PATTERN.finditer(text):
-        if match.start() > cursor:
-            segments.append(
-                {"type": "text", "text": text[cursor: match.start()]})
-
-        is_image = match.group(1) == "!"
-        label = match.group(2)
-        target = match.group(3).strip()
-
-        if is_image:
-            resolved_src = target if _is_valid_image_src(
-                target) else _placeholder_image_src(label)
-            segments.append(
-                {
-                    "type": "image",
-                    "alt": label or "Image coming soon",
-                    "src": resolved_src,
-                }
-            )
-        else:
-            segments.append({"type": "link", "text": label, "url": target})
-
-        cursor = match.end()
-
-    if cursor < len(text):
-        segments.append({"type": "text", "text": text[cursor:]})
-
-    if not segments:
-        segments.append({"type": "text", "text": text})
-
-    return segments
-
-
-def _parse_markdown_content(file_path: Path) -> dict[str, object]:
-    title = ""
-    sections: list[dict[str, Any]] = []
-    current_section: dict[str, Any] | None = None
-    paragraph_lines: list[str] = []
-    list_items: list[str] = []
-
-    def flush_paragraph() -> None:
-        nonlocal paragraph_lines
-        if paragraph_lines and current_section is not None:
-            current_section["blocks"].append(
-                {
-                    "type": "paragraph",
-                    "segments": _parse_inline_markdown(" ".join(paragraph_lines)),
-                }
-            )
-            paragraph_lines = []
-
-    def flush_list() -> None:
-        nonlocal list_items
-        if list_items and current_section is not None:
-            current_section["blocks"].append(
-                {
-                    "type": "list",
-                    "items": [
-                        _parse_inline_markdown(item)
-                        for item in list_items
-                    ],
-                }
-            )
-            list_items = []
-
-    for raw_line in file_path.read_text(encoding="utf-8").splitlines():
-        line = raw_line.strip()
-
-        if not line:
-            flush_paragraph()
-            flush_list()
-            continue
-
-        line = MARKDOWN_COMMENT_PATTERN.sub("", line).strip()
-
-        if not line:
-            continue
-
-        if line.startswith("# "):
-            title = line.removeprefix("# ").strip()
-            continue
-
-        if line.startswith("## "):
-            flush_paragraph()
-            flush_list()
-            current_section = {"heading": line.removeprefix(
-                "## ").strip(), "blocks": []}
-            sections.append(current_section)
-            continue
-
-        if line.startswith("- "):
-            flush_paragraph()
-            list_items.append(line.removeprefix("- ").strip())
-            continue
-
-        # Preserve standalone raw HTML blocks (for example, iframe embeds).
-        if line.startswith("<") and line.endswith(">"):
-            flush_paragraph()
-            flush_list()
-            if current_section is None:
-                continue
-            current_section["blocks"].append(
-                {
-                    "type": "raw_html",
-                    "html": line,
-                }
-            )
-            continue
-
-        image_match = MARKDOWN_INLINE_PATTERN.fullmatch(line)
-        if image_match and image_match.group(1) == "!":
-            flush_paragraph()
-            flush_list()
-            if current_section is None:
-                continue
-            current_section["blocks"].append(
-                {
-                    "type": "image",
-                    "alt": image_match.group(2) or "Image coming soon",
-                    "src": (
-                        image_match.group(3).strip()
-                        if _is_valid_image_src(image_match.group(3).strip())
-                        else _placeholder_image_src(image_match.group(2))
-                    ),
-                }
-            )
-            continue
-
-        paragraph_lines.append(line)
-
-    flush_paragraph()
-    flush_list()
-
-    return {"title": title, "sections": sections}
+def _create_robots_txt() -> str:
+    if ALLOW_ROBOTS:
+        return "User-agent: *\nAllow: /\n"
+    else:
+        return "User-agent: *\nDisallow: /\n"
 
 
 def _load_site_content(app: Flask) -> dict[str, dict[str, object]]:
-    content_root = Path(app.root_path) / "content"
-    return {
-        "biography": _parse_markdown_content(content_root / "biography.md"),
-        "portfolio": _parse_markdown_content(content_root / "portfolio.md"),
-        "contact": _parse_markdown_content(content_root / "contact.md"),
-    }
+    content_path = _site_content_path(app)
+    raw_content = content_path.read_text(encoding="utf-8")
+
+    data = json.loads(raw_content)
+    return data
+
+
+def _save_site_content(app: Flask, content: dict[str, object]) -> None:
+    content_path = _site_content_path(app)
+    content_path.write_text(
+        json.dumps(content, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+
+def get_static_file_url(filename: str) -> str:
+    return url_for('static', filename=filename)
+
+
+def static_files(app: Flask) -> list[str]:
+    """Return a list of all static file URLs for sitemap"""
+    static_dir = Path(app.root_path) / "static"
+    urls = []
+    for file_path in static_dir.rglob("*"):
+        if file_path.is_file():
+            relative_path = file_path.relative_to(static_dir).as_posix()
+            urls.append(get_static_file_url(relative_path))
+    return urls
 
 
 def create_app() -> Flask:
     app = Flask(__name__)
+    app.config["ADMIN_USERNAME"] = os.getenv("ADMIN_USERNAME", "admin")
+    app.config["ADMIN_PASSWORD"] = os.getenv("ADMIN_PASSWORD", "admin")
+
+    def _admin_unauthorized() -> Response:
+        return Response(
+            "Authentication required.",
+            status=401,
+            headers={"WWW-Authenticate": 'Basic realm="Admin"'},
+            mimetype="text/plain",
+        )
+
+    def _is_admin_authenticated() -> bool:
+        auth = request.authorization
+        return bool(
+            auth
+            and auth.type == "basic"
+            and auth.username == app.config["ADMIN_USERNAME"]
+            and auth.password == app.config["ADMIN_PASSWORD"]
+        )
 
     @app.get("/")
     def index() -> str:
@@ -192,7 +76,95 @@ def create_app() -> Flask:
 
     @app.get("/robots.txt")
     def robots() -> Response:
-        return Response("User-agent: *\nDisallow: /\n", mimetype="text/plain")
+        return Response(_create_robots_txt(), mimetype="text/plain")
+
+    @app.get("/admin")
+    def admin_dashboard() -> Response | str:
+        if not _is_admin_authenticated():
+            return _admin_unauthorized()
+
+        content = _load_site_content(app)
+        return render_template(
+            "admin/index.html",
+            content=content,
+            content_json=json.dumps(content, indent=2, ensure_ascii=False),
+            save_message=None,
+            save_error=False,
+        )
+
+    @app.post("/admin/save")
+    def admin_save() -> Response | tuple[str, int]:
+        if not _is_admin_authenticated():
+            return _admin_unauthorized()
+
+        content_json = request.form.get("content_json", "")
+
+        try:
+            parsed_content = json.loads(content_json)
+        except json.JSONDecodeError as exc:
+            return (
+                render_template(
+                    "admin/index.html",
+                    content=_load_site_content(app),
+                    content_json=content_json,
+                    save_message=f"Invalid JSON: {exc.msg}",
+                    save_error=True,
+                ),
+                400,
+            )
+
+        if not isinstance(parsed_content, dict):
+            return (
+                render_template(
+                    "admin/index.html",
+                    content=_load_site_content(app),
+                    content_json=content_json,
+                    save_message="Invalid content payload: root must be an object.",
+                    save_error=True,
+                ),
+                400,
+            )
+
+        _save_site_content(app, parsed_content)
+        return (
+            render_template(
+                "admin/index.html",
+                content=parsed_content,
+                content_json=json.dumps(
+                    parsed_content, indent=2, ensure_ascii=False),
+                save_message="Content saved.",
+                save_error=False,
+            ),
+            200,
+        )
+
+    @app.post("/admin/preview")
+    def admin_preview() -> Response | tuple[str, int]:
+        if not _is_admin_authenticated():
+            return _admin_unauthorized()
+
+        try:
+            payload = request.get_json(force=True, silent=False)
+            if not isinstance(payload, dict):
+                raise ValueError("root must be an object")
+        except Exception as exc:
+            return Response(f"Invalid JSON: {exc}", status=400, mimetype="text/plain")
+
+        html = render_template("index.html", content=payload)
+        return Response(html, mimetype="text/html")
+
+    @app.get("/admin/<page_name>")
+    def admin_page(page_name: str) -> Response:
+        if not _is_admin_authenticated():
+            return _admin_unauthorized()
+
+        content = _load_site_content(app)
+        if page_name not in content:
+            return Response("Page not found", status=404)
+        return Response(
+            f"Editing '{page_name}' page not implemented yet.",
+            mimetype="text/plain",
+        )
 
     @app.get("/sitemap.xml")
     def sitemap() -> Response:
@@ -202,6 +174,7 @@ def create_app() -> Flask:
   <url>
     <loc>{site_url}/</loc>
   </url>
+  {''.join(f'  <url>\n    <loc>{site_url}{file_url}</loc>\n  </url>\n' for file_url in static_files(app))}
 </urlset>
 '''
         return Response(sitemap_xml, mimetype="application/xml")

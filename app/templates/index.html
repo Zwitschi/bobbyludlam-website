@@ -1,48 +1,6 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bobby Ludlam | Austin Comedian, Writer & Artist</title>
-    <meta
-      name="description"
-      content="Bobby Ludlam is an Austin comedian, writer, artist, and creator working across stand-up, film, and creative projects."
-    />
-    <meta
-      name="keywords"
-      content="Bobby Ludlam, Bobby Something, Mohawk comedian, Irish accent mohawk comedian, comedy, stand-up, Austin comedian, open mic comedy, comedy documentary"
-    />
-    <meta property="og:title" content="Bobby Ludlam | Austin Comedian, Writer & Artist" />
-    <meta
-      property="og:description"
-      content="Bobby Ludlam is an Austin comedian, writer, artist, and creator working across stand-up, film, and creative projects."
-    />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Bobby Ludlam" />
-    <meta property="og:image" content="{{ url_for('static', filename='images/bobby-ludlam-austin-1.jpg', _external=True) }}" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Bobby Ludlam | Austin Comedian, Writer & Artist" />
-    <meta name="twitter:description" content="Bobby Ludlam is an Austin comedian, writer, artist, and creator working across stand-up, film, and creative projects." />
-    <meta name="twitter:image" content="{{ url_for('static', filename='images/bobby-ludlam-austin-1.jpg', _external=True) }}" />
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Bobby Ludlam",
-      "description": "Bobby Ludlam is an Austin comedian, writer, artist, and creator working across stand-up, film, and creative projects.",
-      "image": "{{ url_for('static', filename='images/bobby-ludlam-austin-1.jpg', _external=True) }}",
-      "sameAs": [
-        "https://www.instagram.com/bobby_something/"
-      ]
-    }
-    </script>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/site.css') }}"
-    />
-  </head>
-  <body>
-    <main>
+{% extends "_base.html" %}
+
+{% block content %}
       {% macro render_segments(segments) -%}
         {%- for segment in segments -%}
           {%- if segment["type"] == "text" -%}
@@ -156,11 +114,4 @@
         </article>
         {% endfor %}
       </section>
-
-      <footer class="site-footer">
-        <p>Bobby Ludlam</p>
-        <p>Austin comedian, writer, artist, and creator.</p>
-      </footer>
-    </main>
-  </body>
-</html>
+{% endblock %}
