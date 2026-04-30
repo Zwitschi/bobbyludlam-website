@@ -75,6 +75,8 @@
           {% for block in section.blocks %}
           {% if block["type"] == "paragraph" %}
           <p>{{ render_segments(block["segments"]) | safe }}</p>
+          {% elif block["type"] == "raw_html" %}
+          {{ block["html"] | safe }}
           {% elif block["type"] == "image" %}
           <figure class="content-figure">
             <img class="content-image" src="{{ block["src"] }}" alt="{{ block["alt"] }}" loading="lazy" />
@@ -104,6 +106,8 @@
             {% for block in section.blocks %}
             {% if block["type"] == "paragraph" %}
             <p>{{ render_segments(block["segments"]) | safe }}</p>
+            {% elif block["type"] == "raw_html" %}
+            {{ block["html"] | safe }}
             {% elif block["type"] == "image" %}
             <figure class="content-figure compact">
               <img class="content-image" src="{{ block["src"] }}" alt="{{ block["alt"] }}" loading="lazy" />
@@ -133,6 +137,8 @@
           {% for block in section.blocks %}
           {% if block["type"] == "paragraph" %}
           <p>{{ render_segments(block["segments"]) | safe }}</p>
+          {% elif block["type"] == "raw_html" %}
+          {{ block["html"] | safe }}
           {% elif block["type"] == "image" %}
           <figure class="content-figure compact">
             <img class="content-image" src="{{ block["src"] }}" alt="{{ block["alt"] }}" loading="lazy" />

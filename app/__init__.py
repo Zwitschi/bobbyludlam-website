@@ -133,6 +133,20 @@ def _parse_markdown_content(file_path: Path) -> dict[str, object]:
             list_items.append(line.removeprefix("- ").strip())
             continue
 
+        # Preserve standalone raw HTML blocks (for example, iframe embeds).
+        if line.startswith("<") and line.endswith(">"):
+            flush_paragraph()
+            flush_list()
+            if current_section is None:
+                continue
+            current_section["blocks"].append(
+                {
+                    "type": "raw_html",
+                    "html": line,
+                }
+            )
+            continue
+
         image_match = MARKDOWN_INLINE_PATTERN.fullmatch(line)
         if image_match and image_match.group(1) == "!":
             flush_paragraph()

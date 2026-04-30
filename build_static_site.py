@@ -12,7 +12,7 @@ def _relativize_static_urls(html: str) -> str:
 
 
 def generate_static_site(
-    output_dir: Path | str = "docs",
+    output_dir: Path | str = "build",
     *,
     site_url: str = "https://bobbyludlam.com",
     clean: bool = True,

@@ -19,6 +19,8 @@ def test_homepage_renders_content() -> None:
     assert "/static/images/bobby-ludlam-austin-1.jpg" in html
     assert "bobby_ludlam_austin" not in html
     assert "/static/images/safe_space_concept_03.png" in html
+    assert '<iframe width="560" height="315" src="https://www.youtube.com/embed/lcNPESVxiHs"' in html
+    assert "&lt;iframe" not in html
     assert "<!--" not in html
 
 

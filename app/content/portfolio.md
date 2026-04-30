@@ -28,5 +28,8 @@ Bobby has been pursuing stand-up comedy with increasing seriousness, recently mo
 Bobby has a public trail of comedy videos across various platforms, including YouTube channels that are currently inactive but contain material from different chapters of his creative journey. [See](https://www.youtube.com/@ShobbyComedy) [all](https://www.youtube.com/@BobbyLudlam-ql9ed) [channels](https://www.youtube.com/@bobbyludlam2475) [here](https://www.youtube.com/@blu301).
 
 - [Kill Tony Archive](https://www.killarchives.com/comedian/1231/bobby-ludlow?episode=478) (listed as "Bobby Ludlow")
-- [Killing it @ the #comedyvault 🤣 Last comic of the night /#slaying.](https://www.youtube.com/watch?v=lcNPESVxiHs)
 - [Big Jay Oakerson & Dan Soder Clown me](https://www.youtube.com/watch?v=KNPCEiyG8NE)
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/lcNPESVxiHs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+Killing it @ the #comedyvault 🤣 Last comic of the night /#slaying.
