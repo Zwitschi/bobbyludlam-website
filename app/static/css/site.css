@@ -224,6 +224,40 @@ h1 {
   color: var(--muted);
 }
 
+.hero-image {
+  width: min(100%, 30rem);
+  max-width: 100%;
+  height: auto;
+  border-radius: calc(var(--radius-md) + 4px);
+  justify-self: center;
+}
+
+@media (min-width: 721px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 36vw);
+    column-gap: clamp(1rem, 3vw, 2.5rem);
+  }
+
+  .section-nav,
+  .eyebrow,
+  .hero h1 {
+    grid-column: 1 / -1;
+  }
+
+  .hero-image {
+    grid-column: 2;
+    grid-row: 4 / span 2;
+    justify-self: end;
+    align-self: start;
+  }
+
+  .hero .intro {
+    grid-column: 1;
+    grid-row: 5;
+    max-width: 52ch;
+  }
+}
+
 .content-section {
   margin: 1.25rem 0 0;
   padding: clamp(1.25rem, 3vw, 2.25rem);
@@ -390,32 +424,112 @@ h3 {
 @media (max-width: 720px) {
   main {
     width: 100%;
-    padding: 0.5rem 0.5rem 3rem;
+    padding: 0.35rem 0.35rem 1.2rem;
     margin: 0;
+  }
+
+  .hero,
+  .content-section,
+  .site-footer,
+  .card,
+  .content-figure {
+    border: 0;
+    box-shadow: none;
+    backdrop-filter: none;
   }
 
   .hero {
     min-height: auto;
-    border-radius: var(--radius-md);
+    gap: 0.65rem;
+    padding: 0.75rem;
+  }
+
+  .hero-image {
+    width: min(100%, 22rem);
+    max-width: 100%;
+    margin-inline: auto;
+    justify-self: center;
   }
 
   .section-nav {
-    gap: 0.5rem;
+    gap: 0.35rem;
+    margin-bottom: 0.3rem;
   }
 
   .section-nav a {
     flex: 1 1 8rem;
     min-height: 44px;
     text-align: center;
+    padding: 0.45rem 0.65rem;
   }
 
   .portfolio-grid {
     grid-template-columns: 1fr;
+    gap: 0.6rem;
+    margin-top: 0.7rem;
   }
 
   .content-section,
   .site-footer {
     border-radius: var(--radius-sm);
+    padding: 0.65rem;
+    max-width: 100%;
+  }
+
+  .content-section {
+    margin-top: 0.7rem;
+  }
+
+  .site-footer {
+    margin-top: 0.8rem;
+    padding: 0.85rem 0.65rem;
+  }
+
+  .card {
+    padding: 0.6rem;
+    max-width: 100%;
+  }
+
+  .content-figure {
+    margin: 0.5rem 0;
+    padding: 0.35rem;
+    border-radius: var(--radius-sm);
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .content-list,
+  .contact-list {
+    margin-top: 0.65rem;
+    padding-left: 1rem;
+    line-height: 1.65;
+  }
+
+  .content-list li + li {
+    margin-top: 0.2rem;
+  }
+
+  .content-block + .content-block {
+    margin-top: 1rem;
+  }
+
+  .content-image {
+    width: min(100%, calc(100vw - 0.7rem));
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    margin-inline: auto;
+    border-radius: calc(var(--radius-sm) - 6px);
+  }
+
+  .content-section iframe,
+  .card iframe {
+    display: block;
+    width: min(100%, calc(100vw - 1rem));
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    border: 0;
   }
 }
 
