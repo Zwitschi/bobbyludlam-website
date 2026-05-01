@@ -1,3 +1,5 @@
+from run import app
+import app as app_module
 import base64
 import json
 import sys
@@ -5,9 +7,6 @@ from pathlib import Path
 
 # Add the project root to the Python path
 sys.path.insert(0, str(Path(__file__).parent.parent))
-
-import app as app_module
-from run import app
 
 
 def _basic_auth_header(username: str = "admin", password: str = "admin") -> dict[str, str]:

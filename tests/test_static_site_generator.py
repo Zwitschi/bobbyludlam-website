@@ -1,10 +1,9 @@
+from build_static_site import generate_static_site
 from pathlib import Path
 import sys
 
 # Add the project root to the Python path
 sys.path.insert(0, str(Path(__file__).parent.parent))
-
-from build_static_site import generate_static_site
 
 
 def test_generate_static_site_writes_rendered_pages(tmp_path: Path) -> None:
