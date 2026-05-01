@@ -349,13 +349,13 @@ h3 {
 
 .portfolio-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
 }
 
 .card {
-  padding: 0.6rem;
+  padding: 1.2rem;
   background:
     linear-gradient(135deg, rgba(124, 58, 237, 0.14), transparent 34%),
     linear-gradient(315deg, rgba(34, 211, 238, 0.12), transparent 30%),
@@ -376,8 +376,18 @@ h3 {
 }
 
 .card p {
-  margin: 0;
+  margin: 0 0 0.8rem;
   font-size: 1rem;
+  line-height: 1.6;
+}
+
+.card iframe {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: calc(var(--radius-sm) - 4px);
+  margin: 0.8rem 0;
 }
 
 .content-list {
@@ -466,8 +476,8 @@ h3 {
 
   .portfolio-grid {
     grid-template-columns: 1fr;
-    gap: 0.6rem;
-    margin-top: 0.7rem;
+    gap: 1rem;
+    margin-top: 1rem;
   }
 
   .content-section,
@@ -487,7 +497,7 @@ h3 {
   }
 
   .card {
-    padding: 0.6rem;
+    padding: 1rem;
     max-width: 100%;
   }
 
