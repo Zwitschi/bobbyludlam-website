@@ -19,7 +19,6 @@
         </nav>
         <p class="eyebrow">Story, work, and ways to connect</p>
         <h1>Bobby Ludlam</h1>
-        <img class="hero-image" src="{{ url_for('static', filename='images/bobby-ludlam-austin-1.jpg') }}" alt="Bobby Ludlam in Austin, Texas" loading="lazy" />
         <p class="intro">Austin comedian, writer, artist, and creator working across stand-up, film, and unusually sincere big ideas.</p>
       </header>
 
@@ -115,3 +114,12 @@
         {% endfor %}
       </section>
 {% endblock %}
+{% block extra_body %}
+<script>
+  /* ensure iframe width scales with container */
+  document.querySelectorAll(".content-figure iframe").forEach((iframe) => {
+    const containerWidth = iframe.parentElement.offsetWidth;
+    iframe.style.width = `${containerWidth}px`;
+  });
+</script>
+{% endblock extra_body %}

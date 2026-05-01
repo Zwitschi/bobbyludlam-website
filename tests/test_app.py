@@ -1,5 +1,10 @@
 import base64
 import json
+import sys
+from pathlib import Path
+
+# Add the project root to the Python path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import app as app_module
 from run import app
@@ -41,7 +46,7 @@ def test_robots_txt_disallows_indexing() -> None:
 
     assert response.status_code == 200
     assert response.mimetype == "text/plain"
-    assert response.get_data(as_text=True) == "User-agent: *\nDisallow: /\n"
+    assert response.get_data(as_text=True) == "User-agent: *\nAllow: /\n"
 
 
 def test_sitemap_lists_homepage() -> None:

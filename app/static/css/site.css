@@ -101,9 +101,11 @@ body::after {
 }
 
 main {
-  margin: 0 0.5rem 0;
+  margin: 0 auto 0;
   padding: 1rem 0 3rem;
-  max-width: 100%;
+  max-width: 1400px;
+  display: grid;
+  gap: 0.5rem;
 }
 
 a {
@@ -142,7 +144,7 @@ button:focus-visible {
   display: grid;
   gap: 1rem;
   padding: clamp(1.5rem, 3.5vw, 3rem);
-  min-height: 60vh;
+  min-height: 40vh;
   align-content: center;
   border-radius: var(--radius-lg);
 }
@@ -277,6 +279,7 @@ h1 {
 }
 
 .content-figure {
+  max-width: 54rem;
   margin: 1.25rem 0 1.5rem;
   padding: 0.75rem;
   background: var(--surface-strong);

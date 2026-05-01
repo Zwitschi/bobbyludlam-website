@@ -166,6 +166,28 @@ def create_app() -> Flask:
             mimetype="text/plain",
         )
 
+    @app.post("/admin/upload")
+    def admin_upload() -> Response:
+        if not _is_admin_authenticated():
+            return _admin_unauthorized()
+
+        if "file" not in request.files:
+            return Response("No file uploaded", status=400)
+
+        file = request.files["file"]
+        if file.filename == "":
+            return Response("No file selected", status=400)
+
+        if file:
+            filename = file.filename
+            static_dir = Path(app.root_path) / "static" / "images"
+            static_dir.mkdir(parents=True, exist_ok=True)
+            static_filename = Path(f"{static_dir}") / f"{filename}"
+            file.save(static_filename)
+            return Response(f"File {filename} uploaded successfully", status=200)
+
+        return Response("File upload failed", status=500)
+
     @app.get("/sitemap.xml")
     def sitemap() -> Response:
         site_url = request.url_root.rstrip("/")

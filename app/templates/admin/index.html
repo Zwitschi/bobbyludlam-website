@@ -8,17 +8,10 @@
 
   body {
     margin: 0;
-    padding: 1rem;
+    padding: 0.5rem;
     font-family: "Segoe UI", Arial, sans-serif;
     background: #f4f6fb;
     color: #111827;
-  }
-
-  main {
-    max-width: 980px;
-    margin: 0 auto;
-    display: grid;
-    gap: 1rem;
   }
 
   .panel {
@@ -32,6 +25,7 @@
   h2,
   h3 {
     margin: 0 0 0.6rem;
+    font-size: 1.2rem;
   }
 
   p {
@@ -149,6 +143,13 @@
   #rich_editor:focus {
     outline: 2px solid #93c5fd;
     outline-offset: 1px;
+  }
+
+  #rich_editor img {
+    max-width: 200px;
+    max-height: 200px;
+    height: auto;
+    width: auto;
   }
 
   #editor_status {
@@ -303,31 +304,130 @@
     color: #dc2626;
   }
 
-  .preview-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin-bottom: 0.6rem;
+  .image-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+    margin-top: 0.75rem;
   }
 
-  .preview-bar p {
-    margin: 0;
-  }
-
-  #preview_frame {
-    width: 100%;
-    height: 600px;
+  .image-gallery-item {
+    aspect-ratio: 1;
     border: 1px solid #c7cfde;
     border-radius: 8px;
-    background: #ffffff;
+    overflow: hidden;
+    cursor: pointer;
+    background: #f8fafc;
   }
 
-  #preview_status {
-    min-height: 1.2rem;
-    font-size: 0.88rem;
-    color: #475569;
+  .image-gallery-item:hover {
+    border-color: #2563eb;
+  }
+
+  .image-gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .image-gallery-item.selected {
+    border: 2px solid #2563eb;
+  }
+
+  .image-upload-form {
+    margin-top: 0.75rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .image-upload-form input[type="file"] {
+    display: none;
+  }
+
+  .image-upload-label {
+    background: #2563eb;
+    color: #ffffff;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .image-upload-label:hover {
+    background: #1d4ed8;
+  }
+
+  .image-dialog {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .image-dialog.active {
+    display: flex;
+  }
+
+  .image-dialog-content {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    max-width: 80%;
+    max-height: 80%;
+    overflow: auto;
+  }
+
+  .image-dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .image-dialog-close {
+    background: #dc2626;
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .image-dialog-close:hover {
+    background: #b91c1c;
+  }
+
+  .image-dialog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .image-dialog-grid-item {
+    aspect-ratio: 1;
+    border: 1px solid #c7cfde;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .image-dialog-grid-item:hover {
+    border-color: #2563eb;
+  }
+
+  .image-dialog-grid-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .image-dialog-grid-item.selected {
+    border: 2px solid #2563eb;
   }
 
   .save-bar {
@@ -366,6 +466,22 @@
     {{ save_message }}
   </p>
   {% endif %}
+</section>
+
+<section class="panel">
+  <h2>Image Gallery</h2>
+  <p class="help">
+    Upload images to use in your content. Click an image to insert it into the
+    editor.
+  </p>
+  <div class="image-upload-form">
+    <input type="file" id="image_upload_input" accept="image/*" />
+    <label for="image_upload_input" class="image-upload-label"
+      >Upload Image</label
+    >
+    <span id="upload_status"></span>
+  </div>
+  <div id="image_gallery" class="image-gallery"></div>
 </section>
 
 <section class="panel">
@@ -415,6 +531,7 @@
       <button type="button" id="editor_apply">Apply Section</button>
     </div>
 
+    <p id="editor_status" class="help"></p>
     <div
       id="rich_editor"
       contenteditable="true"
@@ -422,26 +539,7 @@
       aria-multiline="true"
       spellcheck="true"
     ></div>
-
-    <p id="editor_status" class="help"></p>
   </div>
-</section>
-
-<section class="panel">
-  <h2>Live Preview</h2>
-  <div class="preview-bar">
-    <p class="help">
-      Reflects current in-memory changes. Click "Refresh Preview" to update
-      after edits.
-    </p>
-    <button type="button" id="preview_refresh">Refresh Preview</button>
-  </div>
-  <p id="preview_status" class="help"></p>
-  <iframe
-    id="preview_frame"
-    title="Site preview"
-    sandbox="allow-same-origin allow-scripts"
-  ></iframe>
 </section>
 
 <section class="panel">
@@ -451,7 +549,7 @@
     before saving.
   </p>
   <script id="initial_content_json" type="application/json">
-    {{ content_json }}
+    {{ content_json|safe }}
   </script>
   <div class="save-bar">
     <button type="button" id="save_btn">Save Content</button>
@@ -481,11 +579,15 @@
     const saveBtn = document.getElementById("save_btn");
     const unsavedBadge = document.getElementById("unsaved_badge");
     const saveStatus = document.getElementById("save_status");
+    const imageUploadInput = document.getElementById("image_upload_input");
+    const imageGallery = document.getElementById("image_gallery");
+    const uploadStatus = document.getElementById("upload_status");
 
     let contentData = null;
     let savedJson = initialContentJson.textContent.trim();
     let selectedSectionIndex = -1;
     let dragStartIndex = -1;
+    let selectedImage = null;
 
     const setStatus = (message, isError = false) => {
       status.textContent = message;
@@ -990,7 +1092,6 @@
 
       markUnsaved();
       setStatus("Applied full section changes to JSON payload.");
-      refreshPreview();
     };
 
     toolbarButtons.forEach((button) => {
@@ -1014,18 +1115,65 @@
     });
 
     imageButton.addEventListener("click", () => {
-      const src = window.prompt("Image URL:", "https://");
-      if (!src) {
-        return;
-      }
-      const alt = window.prompt("Image alt text:", "") || "";
-      richEditor.focus();
-      document.execCommand(
-        "insertHTML",
-        false,
-        `<p><img src="${escapeAttr(src)}" alt="${escapeAttr(alt)}"></p>`,
-      );
+      openImageDialog();
     });
+
+    const openImageDialog = () => {
+      const dialog = document.createElement("div");
+      dialog.className = "image-dialog active";
+      dialog.innerHTML = `
+        <div class="image-dialog-content">
+          <div class="image-dialog-header">
+            <h3>Insert Image</h3>
+            <button type="button" class="image-dialog-close">Close</button>
+          </div>
+          <div class="image-dialog-grid" id="image_dialog_grid"></div>
+        </div>
+      `;
+      document.body.appendChild(dialog);
+
+      const closeButton = dialog.querySelector(".image-dialog-close");
+      closeButton.addEventListener("click", () => {
+        document.body.removeChild(dialog);
+      });
+
+      const grid = dialog.querySelector("#image_dialog_grid");
+      fetch("/static/images/")
+        .then((resp) => resp.text())
+        .then((html) => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, "text/html");
+          const links = doc.querySelectorAll("a");
+          links.forEach((link) => {
+            const href = link.getAttribute("href");
+            if (
+              href &&
+              (href.endsWith(".jpg") ||
+                href.endsWith(".png") ||
+                href.endsWith(".gif"))
+            ) {
+              const img = document.createElement("img");
+              img.src = "/static/images/" + href;
+              img.alt = href;
+              img.style.cursor = "pointer";
+              img.addEventListener("click", () => {
+                const alt = window.prompt("Image alt text:", "") || "";
+                richEditor.focus();
+                document.execCommand(
+                  "insertHTML",
+                  false,
+                  `<p><img src="/static/images/${href}" alt="${escapeAttr(alt)}"></p>`,
+                );
+                document.body.removeChild(dialog);
+              });
+              const item = document.createElement("div");
+              item.className = "image-dialog-grid-item";
+              item.appendChild(img);
+              grid.appendChild(item);
+            }
+          });
+        });
+    };
 
     pageSelector.addEventListener("change", () => {
       selectedSectionIndex = -1;
@@ -1037,8 +1185,39 @@
     applyButton.addEventListener("click", applyEditorToJson);
     sectionAddButton.addEventListener("click", addSection);
     sectionRenameButton.addEventListener("click", renameSection);
-    previewRefreshButton.addEventListener("click", refreshPreview);
     saveBtn.addEventListener("click", saveContent);
+
+    imageUploadInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      uploadStatus.textContent = "Uploading...";
+
+      fetch("/admin/upload", {
+        method: "POST",
+        body: formData,
+        headers: {
+          Authorization: "Basic " + btoa("admin:admin"),
+        },
+      })
+        .then((resp) => {
+          if (resp.ok) {
+            uploadStatus.textContent = "Upload successful!";
+            setTimeout(() => {
+              uploadStatus.textContent = "";
+            }, 2000);
+            refreshImageGallery();
+          } else {
+            uploadStatus.textContent = "Upload failed.";
+          }
+        })
+        .catch((err) => {
+          uploadStatus.textContent = "Upload error: " + err.message;
+        });
+    });
 
     window.addEventListener("beforeunload", (e) => {
       if (unsavedBadge.classList.contains("visible")) {
@@ -1046,8 +1225,46 @@
       }
     });
 
+    const refreshImageGallery = () => {
+      fetch("/static/images/")
+        .then((resp) => resp.text())
+        .then((html) => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, "text/html");
+          const links = doc.querySelectorAll("a");
+          imageGallery.innerHTML = "";
+          links.forEach((link) => {
+            const href = link.getAttribute("href");
+            if (
+              href &&
+              (href.endsWith(".jpg") ||
+                href.endsWith(".png") ||
+                href.endsWith(".gif"))
+            ) {
+              const img = document.createElement("img");
+              img.src = "/static/images/" + href;
+              img.alt = href;
+              img.style.cursor = "pointer";
+              img.addEventListener("click", () => {
+                const alt = window.prompt("Image alt text:", "") || "";
+                richEditor.focus();
+                document.execCommand(
+                  "insertHTML",
+                  false,
+                  `<p><img src="/static/images/${href}" alt="${escapeAttr(alt)}"></p>`,
+                );
+              });
+              const item = document.createElement("div");
+              item.className = "image-gallery-item";
+              item.appendChild(img);
+              imageGallery.appendChild(item);
+            }
+          });
+        });
+    };
+
     loadFromJson();
-    refreshPreview();
+    refreshImageGallery();
   })();
 </script>
 {% endblock %} {% block footer %}{% endblock %}

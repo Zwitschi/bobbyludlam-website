@@ -17,6 +17,15 @@
         ]
       },
       {
+        "blocks": [
+          {
+            "type": "image",
+            "src": "/static/images/bobby-ludlam-austin-1.jpg",
+            "alt": "Bobby Ludlam in Austin, Texas"
+          }
+        ]
+      },
+      {
         "heading": "Full Bio",
         "blocks": [
           {
@@ -109,6 +118,11 @@
         "heading": "Bobby Ludlam's Inter-dimensional Safe Space",
         "blocks": [
           {
+            "type": "image",
+            "alt": "Inter-dimensional Safe Space concept art",
+            "src": "/static/images/safe_space_concept_03.png"
+          },
+          {
             "type": "paragraph",
             "segments": [
               {
@@ -116,11 +130,6 @@
                 "text": "Bobby Ludlam's Inter-dimensional Safe Space is a creative initiative imagining a protected sanctuary for peaceful coexistence between humans, nature, extraterrestrials, Bigfoot, cryptids, and other allegedly mythical beings."
               }
             ]
-          },
-          {
-            "type": "image",
-            "alt": "Inter-dimensional Safe Space concept art",
-            "src": "/static/images/safe_space_concept_03.png"
           },
           {
             "type": "paragraph",
