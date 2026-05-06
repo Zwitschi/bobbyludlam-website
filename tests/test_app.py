@@ -201,8 +201,25 @@ def test_admin_routes_exist() -> None:
 
     assert dashboard.status_code == 200
     assert "Admin Dashboard" in dashboard.get_data(as_text=True)
+    assert "Admin Nav" in dashboard.get_data(as_text=True)
+    assert 'class="admin-layout"' in dashboard.get_data(as_text=True)
+    assert 'class="admin-sidebar panel"' in dashboard.get_data(as_text=True)
+    assert 'class="admin-main"' in dashboard.get_data(as_text=True)
+    assert 'class="panel admin-preview-column"' in dashboard.get_data(
+        as_text=True)
+    assert 'href="#admin-meta"' in dashboard.get_data(as_text=True)
+    assert 'href="#admin-open-graph"' in dashboard.get_data(as_text=True)
+    assert 'href="#admin-twitter"' in dashboard.get_data(as_text=True)
+    assert 'href="#admin-jsonld"' in dashboard.get_data(as_text=True)
+    assert 'href="#admin-footer"' in dashboard.get_data(as_text=True)
     assert "initial_meta_json" in dashboard.get_data(as_text=True)
-    assert "site_meta_editor" in dashboard.get_data(as_text=True)
+    assert "og_title" in dashboard.get_data(as_text=True)
+    assert "footer_summary" in dashboard.get_data(as_text=True)
+    assert "twitter_card" in dashboard.get_data(as_text=True)
+    assert "jsonld_same_as" in dashboard.get_data(as_text=True)
+    assert 'id="admin-open-graph"' in dashboard.get_data(as_text=True)
+    assert 'id="admin-twitter"' in dashboard.get_data(as_text=True)
+    assert 'id="admin-jsonld"' in dashboard.get_data(as_text=True)
     assert page_edit.status_code == 200
 
 

@@ -1,13 +1,36 @@
 (() => {
   const initialContentJson = document.getElementById("initial_content_json");
   const initialMetaJson = document.getElementById("initial_meta_json");
-  const siteMetaEditor = document.getElementById("site_meta_editor");
   const pageSelector = document.getElementById("page_selector");
   const sectionList = document.getElementById("section_list");
   const sectionHeading = document.getElementById("section_heading");
   const heroEyebrow = document.getElementById("hero_eyebrow");
   const heroTitle = document.getElementById("hero_title");
   const heroIntro = document.getElementById("hero_intro");
+  const metaTitle = document.getElementById("meta_title");
+  const metaDescription = document.getElementById("meta_description");
+  const metaKeywords = document.getElementById("meta_keywords");
+  const ogTitle = document.getElementById("og_title");
+  const ogDescription = document.getElementById("og_description");
+  const ogType = document.getElementById("og_type");
+  const ogSiteName = document.getElementById("og_site_name");
+  const ogImage = document.getElementById("og_image");
+  const twitterCard = document.getElementById("twitter_card");
+  const twitterTitle = document.getElementById("twitter_title");
+  const twitterDescription = document.getElementById("twitter_description");
+  const twitterImage = document.getElementById("twitter_image");
+  const jsonldContext = document.getElementById("jsonld_context");
+  const jsonldType = document.getElementById("jsonld_type");
+  const jsonldName = document.getElementById("jsonld_name");
+  const jsonldDescription = document.getElementById("jsonld_description");
+  const jsonldImage = document.getElementById("jsonld_image");
+  const jsonldSameAs = document.getElementById("jsonld_same_as");
+  const footerSummary = document.getElementById("footer_summary");
+  const footerLinks = document.getElementById("footer_links");
+  const footerCopyrightYear = document.getElementById("footer_copyright_year");
+  const footerCreditLabel = document.getElementById("footer_credit_label");
+  const footerCreditUrl = document.getElementById("footer_credit_url");
+  const footerCreditText = document.getElementById("footer_credit_text");
   const richEditor = document.getElementById("rich_editor");
   const status = document.getElementById("editor_status");
   const applyButton = document.getElementById("editor_apply");
@@ -26,8 +49,12 @@
   const imageUploadInput = document.getElementById("image_upload_input");
   const imageGallery = document.getElementById("image_gallery");
   const uploadStatus = document.getElementById("upload_status");
+  const sidebarNavLinks = Array.from(
+    document.querySelectorAll(".admin-sidebar-nav a"),
+  );
 
   let contentData = null;
+  let metaData = null;
   let savedJson = initialContentJson.textContent.trim();
   let savedMetaJson = initialMetaJson.textContent.trim();
   let selectedSectionIndex = -1;
@@ -232,7 +259,48 @@
 
   const serializeContent = () => JSON.stringify(contentData, null, 2);
 
-  const serializeMeta = () => siteMetaEditor.value.trim();
+  const normalizeLines = (value) =>
+    String(value || "")
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean);
+
+  const footerLinksToText = (links) =>
+    (links || [])
+      .map((link) => `${link.label || ""} | ${link.url || ""}`)
+      .join("\n");
+
+  const parseFooterLinks = (value) =>
+    normalizeLines(value)
+      .map((line) => {
+        const [label, ...rest] = line.split("|");
+        return {
+          label: (label || "").trim(),
+          url: rest.join("|").trim(),
+        };
+      })
+      .filter((link) => link.label || link.url);
+
+  const serializeMeta = () => JSON.stringify(metaData, null, 2);
+
+  const getMetaData = () => {
+    if (!metaData || typeof metaData !== "object") {
+      metaData = {};
+    }
+    return metaData;
+  };
+
+  const ensureMetaSection = (key) => {
+    const data = getMetaData();
+    if (
+      !data[key] ||
+      typeof data[key] !== "object" ||
+      Array.isArray(data[key])
+    ) {
+      data[key] = {};
+    }
+    return data[key];
+  };
 
   const getHeroData = () => {
     if (!contentData.hero || typeof contentData.hero !== "object") {
@@ -250,6 +318,94 @@
   const setSaveStatus = (message, isError = false) => {
     saveStatus.textContent = message;
     saveStatus.style.color = isError ? "#b91c1c" : "#166534";
+  };
+
+  const setActiveSidebarLink = (targetId) => {
+    sidebarNavLinks.forEach((link) => {
+      const isActive = link.getAttribute("href") === `#${targetId}`;
+      link.classList.toggle("active", isActive);
+      if (isActive) {
+        link.setAttribute("aria-current", "true");
+      } else {
+        link.removeAttribute("aria-current");
+      }
+    });
+  };
+
+  const getSidebarSections = () =>
+    sidebarNavLinks
+      .map((link) => {
+        const href = link.getAttribute("href") || "";
+        if (!href.startsWith("#")) {
+          return null;
+        }
+        return document.querySelector(href);
+      })
+      .filter(Boolean);
+
+  const updateActiveSidebarFromScroll = () => {
+    const sections = getSidebarSections();
+    if (sections.length === 0) {
+      return;
+    }
+
+    const viewportOffset = window.innerHeight * 0.25;
+    let activeSection = sections[0];
+
+    for (const section of sections) {
+      const rect = section.getBoundingClientRect();
+      if (rect.top <= viewportOffset) {
+        activeSection = section;
+      } else {
+        break;
+      }
+    }
+
+    setActiveSidebarLink(activeSection.id);
+  };
+
+  const initializeSidebarTracking = () => {
+    const sections = getSidebarSections();
+    if (sections.length === 0) {
+      return;
+    }
+
+    const activeHash = window.location.hash.slice(1);
+    if (activeHash && sections.some((section) => section.id === activeHash)) {
+      setActiveSidebarLink(activeHash);
+    } else {
+      setActiveSidebarLink(sections[0].id);
+    }
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const visibleEntries = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort(
+              (left, right) =>
+                right.intersectionRatio - left.intersectionRatio ||
+                left.boundingClientRect.top - right.boundingClientRect.top,
+            );
+
+          if (visibleEntries.length > 0) {
+            setActiveSidebarLink(visibleEntries[0].target.id);
+          }
+        },
+        {
+          rootMargin: "-15% 0px -55% 0px",
+          threshold: [0.1, 0.25, 0.5, 0.75],
+        },
+      );
+
+      sections.forEach((section) => observer.observe(section));
+    }
+
+    window.addEventListener("scroll", updateActiveSidebarFromScroll, {
+      passive: true,
+    });
+    window.addEventListener("hashchange", updateActiveSidebarFromScroll);
+    updateActiveSidebarFromScroll();
   };
 
   const refreshPreview = async () => {
@@ -482,6 +638,88 @@
     heroIntro.value = hero.intro || "";
   };
 
+  const renderMetaFields = () => {
+    const data = getMetaData();
+    const openGraph = ensureMetaSection("open_graph");
+    const twitter = ensureMetaSection("twitter");
+    const jsonld = ensureMetaSection("jsonld");
+    const footer = ensureMetaSection("footer");
+    const credit =
+      typeof footer.credit === "object" && footer.credit !== null
+        ? footer.credit
+        : (footer.credit = {});
+
+    metaTitle.value = data.title || "";
+    metaDescription.value = data.description || "";
+    metaKeywords.value = (data.keywords || []).join("\n");
+
+    ogTitle.value = openGraph.title || "";
+    ogDescription.value = openGraph.description || "";
+    ogType.value = openGraph.type || "";
+    ogSiteName.value = openGraph.site_name || "";
+    ogImage.value = openGraph.image || "";
+
+    twitterCard.value = twitter.card || "";
+    twitterTitle.value = twitter.title || "";
+    twitterDescription.value = twitter.description || "";
+    twitterImage.value = twitter.image || "";
+
+    jsonldContext.value = jsonld["@context"] || "";
+    jsonldType.value = jsonld["@type"] || "";
+    jsonldName.value = jsonld.name || "";
+    jsonldDescription.value = jsonld.description || "";
+    jsonldImage.value = jsonld.image || "";
+    jsonldSameAs.value = (jsonld.sameAs || []).join("\n");
+
+    footerSummary.value = footer.summary || "";
+    footerLinks.value = footerLinksToText(footer.links || []);
+    footerCopyrightYear.value = footer.copyright_year || "";
+    footerCreditLabel.value = credit.label || "";
+    footerCreditUrl.value = credit.url || "";
+    footerCreditText.value = credit.text || "";
+  };
+
+  const syncMetaFromFields = () => {
+    const data = getMetaData();
+    const openGraph = ensureMetaSection("open_graph");
+    const twitter = ensureMetaSection("twitter");
+    const jsonld = ensureMetaSection("jsonld");
+    const footer = ensureMetaSection("footer");
+    const credit =
+      typeof footer.credit === "object" && footer.credit !== null
+        ? footer.credit
+        : (footer.credit = {});
+
+    data.title = metaTitle.value;
+    data.description = metaDescription.value;
+    data.keywords = normalizeLines(metaKeywords.value);
+
+    openGraph.title = ogTitle.value;
+    openGraph.description = ogDescription.value;
+    openGraph.type = ogType.value;
+    openGraph.site_name = ogSiteName.value;
+    openGraph.image = ogImage.value;
+
+    twitter.card = twitterCard.value;
+    twitter.title = twitterTitle.value;
+    twitter.description = twitterDescription.value;
+    twitter.image = twitterImage.value;
+
+    jsonld["@context"] = jsonldContext.value;
+    jsonld["@type"] = jsonldType.value;
+    jsonld.name = jsonldName.value;
+    jsonld.description = jsonldDescription.value;
+    jsonld.image = jsonldImage.value;
+    jsonld.sameAs = normalizeLines(jsonldSameAs.value);
+
+    footer.summary = footerSummary.value;
+    footer.links = parseFooterLinks(footerLinks.value);
+    footer.copyright_year = Number(footerCopyrightYear.value) || 0;
+    credit.label = footerCreditLabel.value;
+    credit.url = footerCreditUrl.value;
+    credit.text = footerCreditText.value;
+  };
+
   const deleteSection = (index) => {
     const sections = getCurrentSections();
     const heading = sections[index]?.heading || "Untitled section";
@@ -513,7 +751,15 @@
       return;
     }
 
+    try {
+      metaData = JSON.parse(savedMetaJson);
+    } catch (err) {
+      setSaveStatus("Cannot load metadata editor: invalid JSON payload.", true);
+      return;
+    }
+
     renderHeroFields();
+    renderMetaFields();
     refreshPageSelector();
     selectedSectionIndex = -1;
     refreshSectionList();
@@ -675,7 +921,6 @@
   sectionRenameButton.addEventListener("click", renameSection);
   previewRefreshButton.addEventListener("click", refreshPreview);
   saveBtn.addEventListener("click", saveContent);
-  siteMetaEditor.addEventListener("input", markUnsaved);
 
   const handleHeroInput = () => {
     const hero = getHeroData();
@@ -689,6 +934,42 @@
   heroEyebrow.addEventListener("input", handleHeroInput);
   heroTitle.addEventListener("input", handleHeroInput);
   heroIntro.addEventListener("input", handleHeroInput);
+
+  const metaInputs = [
+    metaTitle,
+    metaDescription,
+    metaKeywords,
+    ogTitle,
+    ogDescription,
+    ogType,
+    ogSiteName,
+    ogImage,
+    twitterCard,
+    twitterTitle,
+    twitterDescription,
+    twitterImage,
+    jsonldContext,
+    jsonldType,
+    jsonldName,
+    jsonldDescription,
+    jsonldImage,
+    jsonldSameAs,
+    footerSummary,
+    footerLinks,
+    footerCopyrightYear,
+    footerCreditLabel,
+    footerCreditUrl,
+    footerCreditText,
+  ];
+
+  const handleMetaInput = () => {
+    syncMetaFromFields();
+    markUnsaved();
+  };
+
+  metaInputs.forEach((input) => {
+    input.addEventListener("input", handleMetaInput);
+  });
 
   imageUploadInput.addEventListener("change", (e) => {
     const file = e.target.files[0];
@@ -767,5 +1048,6 @@
   };
 
   loadFromJson();
+  initializeSidebarTracking();
   refreshImageGallery();
 })();
