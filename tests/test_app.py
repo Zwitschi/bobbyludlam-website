@@ -201,6 +201,8 @@ def test_admin_routes_exist() -> None:
 
     assert dashboard.status_code == 200
     assert "Admin Dashboard" in dashboard.get_data(as_text=True)
+    assert "initial_meta_json" in dashboard.get_data(as_text=True)
+    assert "site_meta_editor" in dashboard.get_data(as_text=True)
     assert page_edit.status_code == 200
 
 
@@ -216,31 +218,74 @@ def test_admin_routes_require_auth() -> None:
 
 def test_admin_save_updates_json_content(tmp_path, monkeypatch) -> None:
     content_file = tmp_path / "siteContent.json"
+    meta_file = tmp_path / "siteMeta.json"
     initial_content = {
         "biography": {"title": "Biography", "sections": []},
         "portfolio": {"title": "Portfolio", "sections": []},
         "contact": {"title": "Contact", "sections": []},
     }
+    initial_meta = {"title": "Initial title"}
     updated_content = {
         "biography": {"title": "Bio Updated", "sections": []},
         "portfolio": {"title": "Portfolio", "sections": []},
         "contact": {"title": "Contact", "sections": []},
     }
+    updated_meta = {"title": "Updated title",
+                    "footer": {"summary": "Updated footer"}}
     content_file.write_text(json.dumps(initial_content), encoding="utf-8")
+    meta_file.write_text(json.dumps(initial_meta), encoding="utf-8")
     monkeypatch.setattr(app_module, "_site_content_path",
                         lambda _: content_file)
+    monkeypatch.setattr(app_module, "_site_meta_path",
+                        lambda _: meta_file)
 
     client = app.test_client()
     response = client.post(
         "/admin/save",
-        data={"content_json": json.dumps(updated_content)},
+        data={
+            "content_json": json.dumps(updated_content),
+            "meta_json": json.dumps(updated_meta),
+        },
         headers=_basic_auth_header(),
     )
 
     assert response.status_code == 200
-    assert "Content saved." in response.get_data(as_text=True)
+    assert "Content and metadata saved." in response.get_data(as_text=True)
     assert json.loads(content_file.read_text(
         encoding="utf-8")) == updated_content
+    assert json.loads(meta_file.read_text(
+        encoding="utf-8")) == updated_meta
+
+
+def test_admin_save_rejects_invalid_meta_json(tmp_path, monkeypatch) -> None:
+    content_file = tmp_path / "siteContent.json"
+    meta_file = tmp_path / "siteMeta.json"
+    initial_content = {
+        "biography": {"title": "Biography", "sections": []},
+        "portfolio": {"title": "Portfolio", "sections": []},
+        "contact": {"title": "Contact", "sections": []},
+    }
+    initial_meta = {"title": "Initial title"}
+    content_file.write_text(json.dumps(initial_content), encoding="utf-8")
+    meta_file.write_text(json.dumps(initial_meta), encoding="utf-8")
+    monkeypatch.setattr(app_module, "_site_content_path",
+                        lambda _: content_file)
+    monkeypatch.setattr(app_module, "_site_meta_path",
+                        lambda _: meta_file)
+
+    client = app.test_client()
+    response = client.post(
+        "/admin/save",
+        data={
+            "content_json": json.dumps(initial_content),
+            "meta_json": "{bad-json}",
+        },
+        headers=_basic_auth_header(),
+    )
+
+    assert response.status_code == 400
+    assert "Invalid metadata JSON:" in response.get_data(as_text=True)
+    assert json.loads(meta_file.read_text(encoding="utf-8")) == initial_meta
 
 
 def test_admin_save_rejects_invalid_json(tmp_path, monkeypatch) -> None:

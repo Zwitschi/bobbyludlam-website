@@ -49,18 +49,124 @@ def _load_site_content(app: Flask) -> dict[str, object]:
     return _prepare_site_content(_load_site_content_payload(app))
 
 
+def _default_site_meta() -> dict[str, object]:
+    return {
+        "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
+        "description": (
+            "Bobby Ludlam is an Austin comedian, writer, artist, and creator "
+            "working across stand-up, film, and creative projects."
+        ),
+        "keywords": [
+            "Bobby Ludlam",
+            "Bobby Something",
+            "Mohawk comedian",
+            "Irish accent mohawk comedian",
+            "comedy",
+            "stand-up",
+            "Austin comedian",
+            "open mic comedy",
+            "comedy documentary",
+        ],
+        "open_graph": {
+            "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
+            "description": (
+                "Bobby Ludlam is an Austin comedian, writer, artist, and "
+                "creator working across stand-up, film, and creative projects."
+            ),
+            "type": "website",
+            "site_name": "Bobby Ludlam",
+            "image": "images/bobby-ludlam-austin-1.jpg",
+        },
+        "twitter": {
+            "card": "summary_large_image",
+            "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
+            "description": (
+                "Bobby Ludlam is an Austin comedian, writer, artist, and "
+                "creator working across stand-up, film, and creative projects."
+            ),
+            "image": "images/bobby-ludlam-austin-1.jpg",
+        },
+        "jsonld": {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Bobby Ludlam",
+            "description": (
+                "Bobby Ludlam is an Austin comedian, writer, artist, and "
+                "creator working across stand-up, film, and creative projects."
+            ),
+            "image": "images/bobby-ludlam-austin-1.jpg",
+            "sameAs": [
+                "https://www.instagram.com/thebobbyludlam/",
+                "https://bobbyludlam.com/",
+            ],
+        },
+        "footer": {
+            "summary": "Bobby Ludlam - Austin comedian, writer, artist, and creator.",
+            "links": [
+                {
+                    "label": "Instagram",
+                    "url": "https://www.instagram.com/thebobbyludlam/",
+                },
+                {
+                    "label": "bobbyludlam.com",
+                    "url": "https://bobbyludlam.com/",
+                },
+            ],
+            "copyright_year": 2026,
+            "credit": {
+                "label": "All You Can GET",
+                "url": "https://allucanget.biz",
+                "text": "for Bobby Ludlam. All rights reserved.",
+            },
+        },
+    }
+
+
+def _merge_nested_dict(defaults: dict[str, object], values: dict[str, object]) -> dict[str, object]:
+    merged = defaults.copy()
+    for key, default_value in defaults.items():
+        value = values.get(key)
+        if isinstance(default_value, dict):
+            merged[key] = _merge_nested_dict(
+                default_value,
+                value if isinstance(value, dict) else {},
+            )
+        elif isinstance(default_value, list):
+            merged[key] = value if isinstance(value, list) else default_value
+        else:
+            merged[key] = value if value is not None else default_value
+
+    for key, value in values.items():
+        if key not in merged:
+            merged[key] = value
+
+    return merged
+
+
+def _prepare_site_meta(meta: dict[str, object]) -> dict[str, object]:
+    return _merge_nested_dict(_default_site_meta(), meta)
+
+
 def _load_site_meta(app: Flask) -> dict[str, object]:
     meta_path = _site_meta_path(app)
     raw_meta = meta_path.read_text(encoding="utf-8")
 
     data = json.loads(raw_meta)
-    return data
+    return _prepare_site_meta(data)
 
 
 def _save_site_content(app: Flask, content: dict[str, object]) -> None:
     content_path = _site_content_path(app)
     content_path.write_text(
         json.dumps(content, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+
+def _save_site_meta(app: Flask, meta: dict[str, object]) -> None:
+    meta_path = _site_meta_path(app)
+    meta_path.write_text(
+        json.dumps(meta, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
 
@@ -125,10 +231,12 @@ def create_app() -> Flask:
             return _admin_unauthorized()
 
         content = _load_site_content_payload(app)
+        meta = _load_site_meta(app)
         return render_template(
             "admin/index.html",
             content=content,
             content_json=json.dumps(content, indent=2, ensure_ascii=False),
+            meta_json=json.dumps(meta, indent=2, ensure_ascii=False),
             save_message=None,
             save_error=False,
         )
@@ -139,6 +247,11 @@ def create_app() -> Flask:
             return _admin_unauthorized()
 
         content_json = request.form.get("content_json", "")
+        meta_json_supplied = "meta_json" in request.form
+        meta_json = request.form.get(
+            "meta_json",
+            json.dumps(_load_site_meta(app), indent=2, ensure_ascii=False),
+        )
 
         try:
             parsed_content = json.loads(content_json)
@@ -148,6 +261,7 @@ def create_app() -> Flask:
                     "admin/index.html",
                     content=_load_site_content_payload(app),
                     content_json=content_json,
+                    meta_json=meta_json,
                     save_message=f"Invalid JSON: {exc.msg}",
                     save_error=True,
                 ),
@@ -160,20 +274,56 @@ def create_app() -> Flask:
                     "admin/index.html",
                     content=_load_site_content_payload(app),
                     content_json=content_json,
+                    meta_json=meta_json,
                     save_message="Invalid content payload: root must be an object.",
                     save_error=True,
                 ),
                 400,
             )
 
+        try:
+            parsed_meta = json.loads(meta_json)
+        except json.JSONDecodeError as exc:
+            return (
+                render_template(
+                    "admin/index.html",
+                    content=_load_site_content_payload(app),
+                    content_json=content_json,
+                    meta_json=meta_json,
+                    save_message=f"Invalid metadata JSON: {exc.msg}",
+                    save_error=True,
+                ),
+                400,
+            )
+
+        if not isinstance(parsed_meta, dict):
+            return (
+                render_template(
+                    "admin/index.html",
+                    content=_load_site_content_payload(app),
+                    content_json=content_json,
+                    meta_json=meta_json,
+                    save_message="Invalid metadata payload: root must be an object.",
+                    save_error=True,
+                ),
+                400,
+            )
+
         _save_site_content(app, parsed_content)
+        _save_site_meta(app, parsed_meta)
         return (
             render_template(
                 "admin/index.html",
                 content=parsed_content,
                 content_json=json.dumps(
                     parsed_content, indent=2, ensure_ascii=False),
-                save_message="Content saved.",
+                meta_json=json.dumps(
+                    parsed_meta, indent=2, ensure_ascii=False),
+                save_message=(
+                    "Content and metadata saved."
+                    if meta_json_supplied
+                    else "Content saved."
+                ),
                 save_error=False,
             ),
             200,

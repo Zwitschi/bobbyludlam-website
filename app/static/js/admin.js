@@ -1,8 +1,13 @@
 (() => {
   const initialContentJson = document.getElementById("initial_content_json");
+  const initialMetaJson = document.getElementById("initial_meta_json");
+  const siteMetaEditor = document.getElementById("site_meta_editor");
   const pageSelector = document.getElementById("page_selector");
   const sectionList = document.getElementById("section_list");
   const sectionHeading = document.getElementById("section_heading");
+  const heroEyebrow = document.getElementById("hero_eyebrow");
+  const heroTitle = document.getElementById("hero_title");
+  const heroIntro = document.getElementById("hero_intro");
   const richEditor = document.getElementById("rich_editor");
   const status = document.getElementById("editor_status");
   const applyButton = document.getElementById("editor_apply");
@@ -24,6 +29,7 @@
 
   let contentData = null;
   let savedJson = initialContentJson.textContent.trim();
+  let savedMetaJson = initialMetaJson.textContent.trim();
   let selectedSectionIndex = -1;
   let dragStartIndex = -1;
   let selectedImage = null;
@@ -226,8 +232,18 @@
 
   const serializeContent = () => JSON.stringify(contentData, null, 2);
 
+  const serializeMeta = () => siteMetaEditor.value.trim();
+
+  const getHeroData = () => {
+    if (!contentData.hero || typeof contentData.hero !== "object") {
+      contentData.hero = {};
+    }
+    return contentData.hero;
+  };
+
   const markUnsaved = () => {
-    const isDirty = serializeContent() !== savedJson;
+    const isDirty =
+      serializeContent() !== savedJson || serializeMeta() !== savedMetaJson;
     unsavedBadge.classList.toggle("visible", isDirty);
   };
 
@@ -263,9 +279,11 @@
 
   const saveContent = async () => {
     let jsonText = serializeContent();
+    const metaJsonText = serializeMeta();
 
     // client-side validation
     let parsed;
+    let parsedMeta;
     try {
       parsed = JSON.parse(jsonText);
     } catch (err) {
@@ -281,11 +299,32 @@
       return;
     }
 
+    try {
+      parsedMeta = JSON.parse(metaJsonText);
+    } catch (err) {
+      setSaveStatus(
+        `Cannot save metadata: invalid JSON — ${err.message}`,
+        true,
+      );
+      return;
+    }
+    if (
+      typeof parsedMeta !== "object" ||
+      Array.isArray(parsedMeta) ||
+      parsedMeta === null
+    ) {
+      setSaveStatus("Cannot save metadata: JSON root must be an object.", true);
+      return;
+    }
+
     saveBtn.disabled = true;
     setSaveStatus("Saving…");
 
     try {
-      const body = new URLSearchParams({ content_json: jsonText });
+      const body = new URLSearchParams({
+        content_json: jsonText,
+        meta_json: metaJsonText,
+      });
       const resp = await fetch("/admin/save", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -294,8 +333,9 @@
 
       if (resp.ok) {
         savedJson = jsonText;
+        savedMetaJson = metaJsonText;
         markUnsaved();
-        setSaveStatus("Content saved.");
+        setSaveStatus("Content and metadata saved.");
       } else {
         const text = await resp.text();
         // extract save_message from rendered HTML if possible
@@ -323,7 +363,10 @@
     const previous = pageSelector.value;
     pageSelector.innerHTML = "";
 
-    Object.keys(contentData || {}).forEach((pageName) => {
+    Object.entries(contentData || {}).forEach(([pageName, pageData]) => {
+      if (!pageData || !Array.isArray(pageData.sections)) {
+        return;
+      }
       const option = document.createElement("option");
       option.value = pageName;
       option.textContent = pageName;
@@ -432,6 +475,13 @@
         : "";
   };
 
+  const renderHeroFields = () => {
+    const hero = getHeroData();
+    heroEyebrow.value = hero.eyebrow || "";
+    heroTitle.value = hero.title || "";
+    heroIntro.value = hero.intro || "";
+  };
+
   const deleteSection = (index) => {
     const sections = getCurrentSections();
     const heading = sections[index]?.heading || "Untitled section";
@@ -463,6 +513,7 @@
       return;
     }
 
+    renderHeroFields();
     refreshPageSelector();
     selectedSectionIndex = -1;
     refreshSectionList();
@@ -622,7 +673,22 @@
   applyButton.addEventListener("click", applyEditorToJson);
   sectionAddButton.addEventListener("click", addSection);
   sectionRenameButton.addEventListener("click", renameSection);
+  previewRefreshButton.addEventListener("click", refreshPreview);
   saveBtn.addEventListener("click", saveContent);
+  siteMetaEditor.addEventListener("input", markUnsaved);
+
+  const handleHeroInput = () => {
+    const hero = getHeroData();
+    hero.eyebrow = heroEyebrow.value;
+    hero.title = heroTitle.value;
+    hero.intro = heroIntro.value;
+    markUnsaved();
+    refreshPreview();
+  };
+
+  heroEyebrow.addEventListener("input", handleHeroInput);
+  heroTitle.addEventListener("input", handleHeroInput);
+  heroIntro.addEventListener("input", handleHeroInput);
 
   imageUploadInput.addEventListener("change", (e) => {
     const file = e.target.files[0];
