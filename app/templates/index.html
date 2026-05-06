@@ -1,118 +1,60 @@
 {% extends "_base.html" %}
 
 {% block content %}
-      {% macro render_segments(segments) -%}
-        {%- for segment in segments -%}
-          {%- if segment["type"] == "text" -%}
-            {{ segment["text"] }}
-          {%- elif segment["type"] == "link" -%}
-            <a href="{{ segment["url"] }}"{% if "http" in segment["url"] %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ segment["text"] }}</a>
-          {%- endif -%}
-        {%- endfor -%}
-      {%- endmacro %}
+{% macro render_segments(segments) -%}
+  {%- for segment in segments -%}
+    {%- if segment["type"] == "text" -%}
+      {{ segment["text"] }}
+    {%- elif segment["type"] == "link" -%}
+      <a href="{{ segment["url"] }}"{% if "http" in segment["url"] %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ segment["text"] }}</a>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endmacro %}
 
-      <header class="hero">
-        <nav class="section-nav" aria-label="Section navigation">
-          <a href="#biography">Biography</a>
-          <a href="#portfolio">Portfolio</a>
-          <a href="#contact">Contact</a>
-        </nav>
-        <p class="eyebrow">Story, work, and ways to connect</p>
-        <h1>Bobby Ludlam</h1>
-        <p class="intro">Austin comedian, writer, artist, and creator working across stand-up, film, and unusually sincere big ideas.</p>
-      </header>
+<header class="hero">
+  <nav class="section-nav" aria-label="Section navigation">
+    {% for c in content %}
+    <a href="#{{ c }}">{% set d = content[c] %}{{ d.title }}</a>
+    {% endfor %}
+  </nav>
+  <p class="eyebrow">{{ hero.eyebrow }}</p>
+  <h1>{{ hero.title }}</h1>
+  <p class="intro">{{ hero.intro }}</p>
+</header>
 
-      <section class="content-section" id="biography">
-        <div class="section-heading">
-          <p class="section-label">Biography</p>
-          <h2>{{ content.biography.title }}</h2>
-        </div>
-        {% for section in content.biography.sections %}
-        <article class="content-block">
-          <h3>{{ section.heading }}</h3>
-          {% for block in section.blocks %}
-          {% if block["type"] == "paragraph" %}
-          <p>{{ render_segments(block["segments"]) | safe }}</p>
-          {% elif block["type"] == "raw_html" %}
-          {{ block["html"] | safe }}
-          {% elif block["type"] == "image" %}
-          <figure class="content-figure">
-            <img class="content-image" src="{{ block["src"] }}" alt="{{ block["alt"] }}" loading="lazy" />
-            <figcaption>{{ block["alt"] }}</figcaption>
-          </figure>
-          {% elif block["type"] == "list" %}
-          <ul class="content-list">
-            {% for item in block["items"] %}
+
+{% for c in content %}
+<section class="content-section" id="{{ c }}">
+{% set c = content[c] %}
+  <div class="section-heading">
+    <p class="section-label">{{ c.title }}</p>
+    <h2>{{ c.title }}</h2>
+  </div>
+  {% for section in c.sections %}
+  <article class="content-block">
+    <h3>{{ section.heading }}</h3>
+    {% for block in section.blocks %}
+      {% if block["type"] == "paragraph" %}
+        <p>{{ render_segments(block["segments"]) | safe }}</p>
+      {% elif block["type"] == "raw_html" %}
+        {{ block["html"] | safe }}
+      {% elif block["type"] == "image" %}
+        <figure class="content-figure">
+          <img class="content-image" src="{{ block["src"] }}" alt="{{ block["alt"] }}" loading="lazy" />
+          <figcaption>{{ block["alt"] }}</figcaption>
+        </figure>
+      {% elif block["type"] == "list" %}
+        <ul class="content-list">
+          {% for item in block["items"] %}
             <li>{{ render_segments(item) | safe }}</li>
-            {% endfor %}
-          </ul>
-          {% endif %}
           {% endfor %}
-        </article>
-        {% endfor %}
-      </section>
-
-      <section class="content-section" id="portfolio">
-        <div class="section-heading">
-          <p class="section-label">Portfolio</p>
-          <h2>{{ content.portfolio.title }}</h2>
-        </div>
-        <div class="portfolio-grid">
-          {% for section in content.portfolio.sections %}
-          <article class="card">
-            <h3>{{ section.heading }}</h3>
-            {% for block in section.blocks %}
-            {% if block["type"] == "paragraph" %}
-            <p>{{ render_segments(block["segments"]) | safe }}</p>
-            {% elif block["type"] == "raw_html" %}
-            {{ block["html"] | safe }}
-            {% elif block["type"] == "image" %}
-            <figure class="content-figure compact">
-              <img class="content-image" src="{{ block["src"] }}" alt="{{ block["alt"] }}" loading="lazy" />
-              <figcaption>{{ block["alt"] }}</figcaption>
-            </figure>
-            {% elif block["type"] == "list" %}
-            <ul class="content-list compact">
-              {% for item in block["items"] %}
-              <li>{{ render_segments(item) | safe }}</li>
-              {% endfor %}
-            </ul>
-            {% endif %}
-            {% endfor %}
-          </article>
-          {% endfor %}
-        </div>
-      </section>
-
-      <section class="content-section" id="contact">
-        <div class="section-heading">
-          <p class="section-label">Contact</p>
-          <h2>{{ content.contact.title }}</h2>
-        </div>
-        {% for section in content.contact.sections %}
-        <article class="content-block">
-          <h3>{{ section.heading }}</h3>
-          {% for block in section.blocks %}
-          {% if block["type"] == "paragraph" %}
-          <p>{{ render_segments(block["segments"]) | safe }}</p>
-          {% elif block["type"] == "raw_html" %}
-          {{ block["html"] | safe }}
-          {% elif block["type"] == "image" %}
-          <figure class="content-figure compact">
-            <img class="content-image" src="{{ block["src"] }}" alt="{{ block["alt"] }}" loading="lazy" />
-            <figcaption>{{ block["alt"] }}</figcaption>
-          </figure>
-          {% elif block["type"] == "list" %}
-          <ul class="contact-list">
-            {% for item in block["items"] %}
-            <li>{{ render_segments(item) | safe }}</li>
-            {% endfor %}
-          </ul>
-          {% endif %}
-          {% endfor %}
-        </article>
-        {% endfor %}
-      </section>
+        </ul>
+      {% endif %}
+    {% endfor %}
+  </article>
+  {% endfor %}
+</section>
+{% endfor %}
 {% endblock %}
 {% block extra_body %}
 <script>

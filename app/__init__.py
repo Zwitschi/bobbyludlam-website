@@ -10,6 +10,10 @@ def _site_content_path(app: Flask) -> Path:
     return Path(app.root_path) / "content" / "siteContent.json"
 
 
+def _site_meta_path(app: Flask) -> Path:
+    return Path(app.root_path) / "content" / "siteMeta.json"
+
+
 def _create_robots_txt() -> str:
     if ALLOW_ROBOTS:
         return "User-agent: *\nAllow: /\n"
@@ -17,11 +21,39 @@ def _create_robots_txt() -> str:
         return "User-agent: *\nDisallow: /\n"
 
 
-def _load_site_content(app: Flask) -> dict[str, dict[str, object]]:
+def _load_site_content_payload(app: Flask) -> dict[str, object]:
     content_path = _site_content_path(app)
     raw_content = content_path.read_text(encoding="utf-8")
 
     data = json.loads(raw_content)
+    return data
+
+
+def _prepare_site_content(content: dict[str, object]) -> dict[str, object]:
+    hero_defaults = {
+        "eyebrow": "Story, work, and ways to connect",
+        "title": "Bobby Ludlam",
+        "intro": (
+            "Austin comedian, writer, artist, and creator working across "
+            "stand-up, film, and unusually sincere big ideas."
+        ),
+    }
+    raw_hero = content.get("hero", {})
+    hero = hero_defaults | raw_hero if isinstance(
+        raw_hero, dict) else hero_defaults
+    pages = {key: value for key, value in content.items() if key != "hero"}
+    return {"hero": hero, "pages": pages}
+
+
+def _load_site_content(app: Flask) -> dict[str, object]:
+    return _prepare_site_content(_load_site_content_payload(app))
+
+
+def _load_site_meta(app: Flask) -> dict[str, object]:
+    meta_path = _site_meta_path(app)
+    raw_meta = meta_path.read_text(encoding="utf-8")
+
+    data = json.loads(raw_meta)
     return data
 
 
@@ -53,6 +85,10 @@ def create_app() -> Flask:
     app.config["ADMIN_USERNAME"] = os.getenv("ADMIN_USERNAME", "admin")
     app.config["ADMIN_PASSWORD"] = os.getenv("ADMIN_PASSWORD", "admin")
 
+    @app.context_processor
+    def inject_site_meta() -> dict[str, object]:
+        return {"site_meta": _load_site_meta(app)}
+
     def _admin_unauthorized() -> Response:
         return Response(
             "Authentication required.",
@@ -72,7 +108,12 @@ def create_app() -> Flask:
 
     @app.get("/")
     def index() -> str:
-        return render_template("index.html", content=_load_site_content(app))
+        site_content = _load_site_content(app)
+        return render_template(
+            "index.html",
+            content=site_content["pages"],
+            hero=site_content["hero"],
+        )
 
     @app.get("/robots.txt")
     def robots() -> Response:
@@ -83,7 +124,7 @@ def create_app() -> Flask:
         if not _is_admin_authenticated():
             return _admin_unauthorized()
 
-        content = _load_site_content(app)
+        content = _load_site_content_payload(app)
         return render_template(
             "admin/index.html",
             content=content,
@@ -105,7 +146,7 @@ def create_app() -> Flask:
             return (
                 render_template(
                     "admin/index.html",
-                    content=_load_site_content(app),
+                    content=_load_site_content_payload(app),
                     content_json=content_json,
                     save_message=f"Invalid JSON: {exc.msg}",
                     save_error=True,
@@ -117,7 +158,7 @@ def create_app() -> Flask:
             return (
                 render_template(
                     "admin/index.html",
-                    content=_load_site_content(app),
+                    content=_load_site_content_payload(app),
                     content_json=content_json,
                     save_message="Invalid content payload: root must be an object.",
                     save_error=True,
@@ -150,7 +191,12 @@ def create_app() -> Flask:
         except Exception as exc:
             return Response(f"Invalid JSON: {exc}", status=400, mimetype="text/plain")
 
-        html = render_template("index.html", content=payload)
+        site_content = _prepare_site_content(payload)
+        html = render_template(
+            "index.html",
+            content=site_content["pages"],
+            hero=site_content["hero"],
+        )
         return Response(html, mimetype="text/html")
 
     @app.get("/admin/<page_name>")
@@ -158,7 +204,7 @@ def create_app() -> Flask:
         if not _is_admin_authenticated():
             return _admin_unauthorized()
 
-        content = _load_site_content(app)
+        content = _load_site_content_payload(app)
         if page_name not in content:
             return Response("Page not found", status=404)
         return Response(

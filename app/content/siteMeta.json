@@ -1,0 +1,58 @@
+{
+  "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
+  "description": "Bobby Ludlam is an Austin comedian, writer, artist, and creator working across stand-up, film, and creative projects.",
+  "keywords": [
+    "Bobby Ludlam",
+    "Bobby Something",
+    "Mohawk comedian",
+    "Irish accent mohawk comedian",
+    "comedy",
+    "stand-up",
+    "Austin comedian",
+    "open mic comedy",
+    "comedy documentary"
+  ],
+  "open_graph": {
+    "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
+    "description": "Bobby Ludlam is an Austin comedian, writer, artist, and creator working across stand-up, film, and creative projects.",
+    "type": "website",
+    "site_name": "Bobby Ludlam",
+    "image": "images/bobby-ludlam-austin-1.jpg"
+  },
+  "twitter": {
+    "card": "summary_large_image",
+    "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
+    "description": "Bobby Ludlam is an Austin comedian, writer, artist, and creator working across stand-up, film, and creative projects.",
+    "image": "images/bobby-ludlam-austin-1.jpg"
+  },
+  "jsonld": {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Bobby Ludlam",
+    "description": "Bobby Ludlam is an Austin comedian, writer, artist, and creator working across stand-up, film, and creative projects.",
+    "image": "images/bobby-ludlam-austin-1.jpg",
+    "sameAs": [
+      "https://www.instagram.com/thebobbyludlam/",
+      "https://bobbyludlam.com/"
+    ]
+  },
+  "footer": {
+    "summary": "Bobby Ludlam - Austin comedian, writer, artist, and creator.",
+    "links": [
+      {
+        "label": "Instagram",
+        "url": "https://www.instagram.com/thebobbyludlam/"
+      },
+      {
+        "label": "bobbyludlam.com",
+        "url": "https://bobbyludlam.com/"
+      }
+    ],
+    "copyright_year": 2026,
+    "credit": {
+      "label": "All You Can GET",
+      "url": "https://allucanget.biz",
+      "text": "for Bobby Ludlam. All rights reserved."
+    }
+  }
+}

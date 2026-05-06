@@ -38,6 +38,139 @@ def test_homepage_renders_content() -> None:
     assert "<!--" not in html
 
 
+def test_homepage_renders_hero_content_from_json(tmp_path, monkeypatch) -> None:
+    content_file = tmp_path / "siteContent.json"
+    content_file.write_text(
+        json.dumps(
+            {
+                "hero": {
+                    "eyebrow": "Custom eyebrow",
+                    "title": "Custom hero title",
+                    "intro": "Custom intro copy.",
+                },
+                "biography": {"title": "Biography", "sections": []},
+                "portfolio": {"title": "Portfolio", "sections": []},
+                "contact": {"title": "Contact", "sections": []},
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(app_module, "_site_content_path",
+                        lambda _: content_file)
+
+    client = app.test_client()
+    response = client.get("/")
+    html = response.get_data(as_text=True)
+
+    assert response.status_code == 200
+    assert "Custom eyebrow" in html
+    assert "Custom hero title" in html
+    assert "Custom intro copy." in html
+    assert '#hero' not in html
+    assert '>Hero<' not in html
+
+
+def test_homepage_renders_footer_from_site_meta(tmp_path, monkeypatch) -> None:
+    meta_file = tmp_path / "siteMeta.json"
+    meta_file.write_text(
+        json.dumps(
+            {
+                "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
+                "description": "Meta description",
+                "keywords": ["Bobby Ludlam"],
+                "open_graph": {
+                    "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
+                    "description": "Meta description",
+                    "type": "website",
+                    "site_name": "Bobby Ludlam",
+                    "image": "images/bobby-ludlam-austin-1.jpg"
+                },
+                "twitter": {
+                    "card": "summary_large_image",
+                    "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
+                    "description": "Meta description",
+                    "image": "images/bobby-ludlam-austin-1.jpg"
+                },
+                "jsonld": {
+                    "@context": "https://schema.org",
+                    "@type": "Person",
+                    "name": "Bobby Ludlam",
+                    "description": "Meta description",
+                    "image": "images/bobby-ludlam-austin-1.jpg",
+                    "sameAs": [
+                        "https://www.instagram.com/thebobbyludlam/",
+                        "https://bobbyludlam.com/"
+                    ]
+                },
+                "footer": {
+                    "summary": "Custom footer summary.",
+                    "links": [
+                        {
+                            "label": "Custom Instagram",
+                            "url": "https://example.com/instagram"
+                        },
+                        {
+                            "label": "Custom Site",
+                            "url": "https://example.com/site"
+                        }
+                    ],
+                    "copyright_year": 2030,
+                    "credit": {
+                        "label": "Custom Credit",
+                        "url": "https://example.com/credit",
+                        "text": "custom credit text"
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(app_module, "_site_meta_path", lambda _: meta_file)
+
+    client = app.test_client()
+    response = client.get("/")
+    html = response.get_data(as_text=True)
+
+    assert response.status_code == 200
+    assert "Custom footer summary." in html
+    assert "Custom Instagram" in html
+    assert "https://example.com/instagram" in html
+    assert "Custom Site" in html
+    assert "https://example.com/site" in html
+    assert "&copy; 2030" in html
+    assert "Custom Credit" in html
+    assert "custom credit text" in html
+
+
+def test_admin_preview_ignores_hero_as_page_section() -> None:
+    client = app.test_client()
+    payload = {
+        "hero": {
+            "eyebrow": "Preview eyebrow",
+            "title": "Preview title",
+            "intro": "Preview intro",
+        },
+        "biography": {"title": "Biography", "sections": []},
+        "portfolio": {"title": "Portfolio", "sections": []},
+        "contact": {"title": "Contact", "sections": []},
+    }
+
+    response = client.post(
+        "/admin/preview",
+        data=json.dumps(payload),
+        content_type="application/json",
+        headers=_basic_auth_header(),
+    )
+    html = response.get_data(as_text=True)
+
+    assert response.status_code == 200
+    assert "Preview eyebrow" in html
+    assert "Preview title" in html
+    assert "Preview intro" in html
+    assert '#hero' not in html
+    assert '>Hero<' not in html
+
+
 def test_robots_txt_disallows_indexing() -> None:
     client = app.test_client()
 
