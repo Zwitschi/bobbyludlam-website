@@ -1,0 +1,24 @@
+{% extends "admin/admin_base.html" %} {% block admin_content %}
+<section class="panel" id="admin-overview">
+  <h1>Live Preview</h1>
+  <p>Full-page preview of the site with current in-memory content.</p>
+</section>
+
+<section class="panel" id="admin-preview-full">
+  <div class="save-bar">
+    <button type="button" id="preview_refresh">Refresh Preview</button>
+    <span id="preview_status" class="help"></span>
+  </div>
+  <iframe
+    id="preview_frame"
+    title="Live preview"
+    class="image-editor-preview"
+    style="
+      width: 100%;
+      min-height: 80vh;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+    "
+  ></iframe>
+</section>
+{% endblock %}

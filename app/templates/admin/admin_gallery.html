@@ -1,0 +1,36 @@
+{% extends "admin/admin_base.html" %}
+
+{% block admin_content %}
+<section class="panel" id="admin-overview">
+  <h1>Admin Dashboard — Gallery</h1>
+  <p>Upload images, edit captions, reorder the gallery, and remove unused files.</p>
+</section>
+
+<section class="panel" id="admin-upload">
+  {% include "admin/partials/_gallery_upload.html" %}
+</section>
+
+<section class="panel" id="admin-gallery-grid">
+  <h2>Images</h2>
+  <p class="help">Drag images to reorder. Captions are saved to `gallery.json`.</p>
+  <script id="initial_gallery_json" type="application/json">
+    {{ gallery|tojson }}
+  </script>
+  {% include "admin/partials/_gallery_grid.html" %}
+</section>
+
+<section class="panel" id="admin-save">
+  <h2>Save Gallery</h2>
+  <div class="save-bar">
+    <button type="button" id="gallery_save">Save Captions</button>
+    <span id="unsaved_badge">Unsaved changes</span>
+    <span id="gallery_status" class="help"></span>
+  </div>
+</section>
+{% endblock %}
+
+{% block admin_preview %}{% endblock %}
+
+{% block extra_body %}
+<script src="{{ url_for('static', filename='js/gallery.js') }}"></script>
+{% endblock %}

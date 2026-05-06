@@ -1,0 +1,63 @@
+{% extends "admin/admin_base.html" %} {% block admin_content %}
+<section class="panel" id="admin-overview">
+  <h1>Admin Dashboard — Metadata</h1>
+  <p>
+    Manage site metadata in one place. Edit basic metadata, Open Graph, Twitter
+    Card, JSON-LD, and footer content, then save.
+  </p>
+  {% if save_message %}
+  <p class="message {% if save_error %}error{% else %}ok{% endif %}">
+    {{ save_message }}
+  </p>
+  {% endif %}
+</section>
+
+<section class="panel" id="admin-meta">
+  <h2>Basic Metadata</h2>
+  <p class="help">Edit core metadata stored in `siteMeta.json`.</p>
+  <script id="initial_meta_json" type="application/json">
+    {{ meta_json|safe }}
+  </script>
+  <script id="initial_content_json" type="application/json">
+    {{ content_json|safe }}
+  </script>
+  {% include "admin/partials/_meta_basic.html" %}
+</section>
+
+<section class="panel" id="admin-open-graph">
+  <h2>Open Graph</h2>
+  <p class="help">Edit social metadata used for Open Graph previews.</p>
+  {% include "admin/partials/_meta_og.html" %}
+</section>
+
+<section class="panel" id="admin-twitter">
+  <h2>Twitter Card</h2>
+  <p class="help">Edit metadata used for Twitter card previews.</p>
+  {% include "admin/partials/_meta_twitter.html" %}
+</section>
+
+<section class="panel" id="admin-jsonld">
+  <h2>JSON-LD</h2>
+  <p class="help">Edit structured data fields stored in `siteMeta.json`.</p>
+  {% include "admin/partials/_meta_jsonld.html" %}
+</section>
+
+<section class="panel" id="admin-footer">
+  <h2>Footer Content</h2>
+  <p class="help">Edit footer copy and links stored in `siteMeta.json`.</p>
+  {% include "admin/partials/_meta_footer.html" %}
+</section>
+
+<section class="panel" id="admin-save">
+  <h2>Save Metadata</h2>
+  <p class="help">
+    All edits are in-memory until you click Save. Invalid JSON will be rejected
+    before saving.
+  </p>
+  <div class="save-bar">
+    <button type="button" id="save_btn">Save Metadata</button>
+    <span id="unsaved_badge">Unsaved changes</span>
+    <span id="save_status" class="help"></span>
+  </div>
+</section>
+{% endblock %}

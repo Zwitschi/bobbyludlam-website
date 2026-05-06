@@ -1,0 +1,112 @@
+{% extends "admin/admin_base.html" %} {% block admin_content %}
+<section class="panel" id="admin-overview">
+  <h1>Admin Dashboard — Content</h1>
+  <p>
+    Manage site content in one place. Edit hero copy and page sections, then
+    save.
+  </p>
+  {% if save_message %}
+  <p class="message {% if save_error %}error{% else %}ok{% endif %}">
+    {{ save_message }}
+  </p>
+  {% endif %}
+</section>
+
+<section class="panel" id="admin-hero">
+  <h2>Hero Content</h2>
+  <p class="help">Update hero copy stored in `siteContent.json`.</p>
+  <div class="editor-grid">
+    <div class="editor-row">
+      <label for="hero_eyebrow">Eyebrow</label>
+      <input id="hero_eyebrow" type="text" placeholder="Hero eyebrow" />
+    </div>
+    <div class="editor-row">
+      <label for="hero_title">Title</label>
+      <input id="hero_title" type="text" placeholder="Hero title" />
+    </div>
+    <div class="editor-row">
+      <label for="hero_intro">Intro</label>
+      <textarea
+        id="hero_intro"
+        rows="4"
+        placeholder="Hero intro copy"
+      ></textarea>
+    </div>
+  </div>
+</section>
+
+<section class="panel" id="admin-sections">
+  <h2>Content Sections</h2>
+  <p class="help">
+    Drag to reorder. Click a section to select and edit its heading. Use ✕ to
+    delete.
+  </p>
+  <div class="editor-grid">
+    <div class="editor-row">
+      <label for="page_selector">Page</label>
+      <select id="page_selector"></select>
+    </div>
+
+    <ul id="section_list" class="section-list"></ul>
+
+    <div class="editor-row">
+      <label for="section_heading">Section heading</label>
+      <input id="section_heading" type="text" placeholder="Section heading" />
+    </div>
+
+    <div class="section-actions" aria-label="Section actions">
+      <button type="button" id="section_add">Add Section</button>
+      <button type="button" id="section_rename">Update Heading</button>
+    </div>
+  </div>
+  <p class="help">
+    Select a section, edit all of its content below, then apply changes to that
+    full section.
+  </p>
+  <div class="editor-grid">
+    <div class="toolbar" aria-label="Rich text tools">
+      <button type="button" data-editor-cmd="bold">
+        <strong>Bold</strong>
+      </button>
+      <button type="button" data-editor-cmd="italic">
+        <em>Italic</em>
+      </button>
+      <button type="button" data-editor-cmd="insertUnorderedList">
+        Bullet List
+      </button>
+      <button type="button" id="editor_link">Add Link</button>
+      <button type="button" id="editor_image">Add Image</button>
+      <button type="button" id="editor_reload">Reload Section</button>
+      <button type="button" id="editor_apply">Apply Section</button>
+    </div>
+
+    <p id="editor_status" class="help"></p>
+    <div
+      id="rich_editor"
+      contenteditable="true"
+      role="textbox"
+      aria-multiline="true"
+      spellcheck="true"
+    ></div>
+  </div>
+</section>
+
+<section class="panel" id="admin-save">
+  <h2>Save Content</h2>
+  <p class="help">
+    All edits are in-memory until you click Save. Invalid JSON will be rejected
+    before saving.
+  </p>
+  <script id="initial_content_json" type="application/json">
+    {{ content_json|safe }}
+  </script>
+  <script id="initial_meta_json" type="application/json">
+    {{ meta_json|safe }}
+  </script>
+  <div class="save-bar">
+    <button type="button" id="save_btn">Save Content</button>
+    <span id="unsaved_badge">Unsaved changes</span>
+    <span id="save_status" class="help"></span>
+  </div>
+</section>
+{% endblock %}

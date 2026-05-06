@@ -74,14 +74,57 @@ Use `--no-clean` if you want to keep existing files in the output directory.
 ```text
 app/
     content/
+        siteContent.json      # Hero copy and page sections
+        gallery.json          # Gallery image captions and ordering
+        siteMeta.json         # Metadata (title, OG, Twitter, JSON-LD, footer)
     static/
+        css/
+            admin.css         # Admin dashboard styles
+            site.css          # Public site styles
+        js/
+            admin.js          # Admin editor logic (content/meta handling)
+        images/               # Uploaded images
     templates/
-    __init__.py
+        _base.html            # Public site base template
+        index.html            # Public site homepage
+        admin/
+            admin_base.html       # Shared admin shell (sidebar + preview)
+            admin_navigation.html # Sidebar nav partial
+            admin_content.html    # Content editor page (hero, sections)
+            admin_gallery.html    # Image gallery manager
+            admin_meta.html       # Metadata editor page (OG, Twitter, etc.)
+            admin_preview.html    # Full-page live preview
+            partials/             # Reusable metadata field panels
 tests/
 build_static_site.py
 run.py
 requirements.txt
 ```
+
+## Admin Interface
+
+The admin dashboard is split into three sections:
+
+| Route            | Purpose                                                          |
+| ---------------- | ---------------------------------------------------------------- |
+| `/admin`         | Overview with links to each editor                               |
+| `/admin/content` | Edit hero copy and page sections                                 |
+| `/admin/gallery` | Upload images, edit captions, reorder, and delete gallery files  |
+| `/admin/meta`    | Edit metadata (basic, Open Graph, Twitter Card, JSON-LD, footer) |
+
+Both pages share a persistent live preview panel and sidebar navigation. Authentication uses HTTP Basic Auth (username/password from `ADMIN_USERNAME`/`ADMIN_PASSWORD` env vars, default: `admin`/`admin`).
+
+### Content vs Metadata Editing
+
+- **Content page** — hero fields and rich text section editor. Changes stored in `siteContent.json`.
+- **Gallery page** — image upload, caption editing, ordering, and deletion. Metadata is stored in `gallery.json`; files are stored in `app/static/images/`.
+- **Meta page** — title, description, keywords, social media metadata, structured data, footer copy. Changes stored in `siteMeta.json`.
+
+Each page has its own save button. Saving content does not affect metadata dirty state and vice versa. The save button highlights amber with a pulse animation when unsaved changes exist.
+
+### JSON-Backed Content Management
+
+All site content and metadata is stored in JSON files under `app/content/`. The admin UI provides a visual editor — no need to hand-edit source templates. Changes are held in-memory until explicitly saved via the save button. The live preview renders the current in-memory state without requiring a page reload.
 
 ## Deployment
 

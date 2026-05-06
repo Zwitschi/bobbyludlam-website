@@ -46,22 +46,40 @@
   const saveBtn = document.getElementById("save_btn");
   const unsavedBadge = document.getElementById("unsaved_badge");
   const saveStatus = document.getElementById("save_status");
-  const imageUploadInput = document.getElementById("image_upload_input");
-  const imageGallery = document.getElementById("image_gallery");
-  const uploadStatus = document.getElementById("upload_status");
   const sidebarNavLinks = Array.from(
     document.querySelectorAll(".admin-sidebar-nav a"),
   );
 
+  const isContentPage = !!(
+    heroEyebrow ||
+    pageSelector ||
+    sectionList ||
+    richEditor
+  );
+  const isMetaPage = !!(
+    metaTitle ||
+    ogTitle ||
+    twitterCard ||
+    jsonldContext ||
+    footerSummary
+  );
+  const currentPage = isContentPage
+    ? "content"
+    : isMetaPage
+      ? "meta"
+      : "unknown";
+
   let contentData = null;
   let metaData = null;
-  let savedJson = initialContentJson.textContent.trim();
-  let savedMetaJson = initialMetaJson.textContent.trim();
+  let savedJson = initialContentJson?.textContent.trim() || "{}";
+  let savedMetaJson = initialMetaJson?.textContent.trim() || "{}";
   let selectedSectionIndex = -1;
   let dragStartIndex = -1;
-  let selectedImage = null;
+  let contentDirty = false;
+  let metaDirty = false;
 
   const setStatus = (message, isError = false) => {
+    if (!status) return;
     status.textContent = message;
     status.style.color = isError ? "#b91c1c" : "#1e40af";
   };
@@ -310,12 +328,17 @@
   };
 
   const markUnsaved = () => {
-    const isDirty =
-      serializeContent() !== savedJson || serializeMeta() !== savedMetaJson;
-    unsavedBadge.classList.toggle("visible", isDirty);
+    if (!unsavedBadge) return;
+    const contentIsDirty = serializeContent() !== savedJson;
+    const metaIsDirty = serializeMeta() !== savedMetaJson;
+    const showUnsaved =
+      currentPage === "content" ? contentIsDirty : metaIsDirty;
+    unsavedBadge.classList.toggle("visible", showUnsaved);
+    if (saveBtn) saveBtn.classList.toggle("unsaved", showUnsaved);
   };
 
   const setSaveStatus = (message, isError = false) => {
+    if (!saveStatus) return;
     saveStatus.textContent = message;
     saveStatus.style.color = isError ? "#b91c1c" : "#166534";
   };
@@ -434,7 +457,8 @@
   };
 
   const saveContent = async () => {
-    let jsonText = serializeContent();
+    const isContentPage = currentPage === "content";
+    const jsonText = serializeContent();
     const metaJsonText = serializeMeta();
 
     // client-side validation
@@ -477,21 +501,28 @@
     setSaveStatus("Saving…");
 
     try {
+      const endpoint = isContentPage
+        ? "/admin/save/content"
+        : "/admin/save/meta";
       const body = new URLSearchParams({
         content_json: jsonText,
         meta_json: metaJsonText,
       });
-      const resp = await fetch("/admin/save", {
+      const resp = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: body.toString(),
       });
 
       if (resp.ok) {
-        savedJson = jsonText;
-        savedMetaJson = metaJsonText;
+        if (isContentPage) {
+          savedJson = jsonText;
+          setSaveStatus("Content saved.");
+        } else {
+          savedMetaJson = metaJsonText;
+          setSaveStatus("Metadata saved.");
+        }
         markUnsaved();
-        setSaveStatus("Content and metadata saved.");
       } else {
         const text = await resp.text();
         // extract save_message from rendered HTML if possible
@@ -632,6 +663,7 @@
   };
 
   const renderHeroFields = () => {
+    if (!heroEyebrow || !heroTitle || !heroIntro) return;
     const hero = getHeroData();
     heroEyebrow.value = hero.eyebrow || "";
     heroTitle.value = hero.title || "";
@@ -639,6 +671,7 @@
   };
 
   const renderMetaFields = () => {
+    if (!metaTitle) return;
     const data = getMetaData();
     const openGraph = ensureMetaSection("open_graph");
     const twitter = ensureMetaSection("twitter");
@@ -650,36 +683,39 @@
         : (footer.credit = {});
 
     metaTitle.value = data.title || "";
-    metaDescription.value = data.description || "";
-    metaKeywords.value = (data.keywords || []).join("\n");
+    if (metaDescription) metaDescription.value = data.description || "";
+    if (metaKeywords) metaKeywords.value = (data.keywords || []).join("\n");
 
-    ogTitle.value = openGraph.title || "";
-    ogDescription.value = openGraph.description || "";
-    ogType.value = openGraph.type || "";
-    ogSiteName.value = openGraph.site_name || "";
-    ogImage.value = openGraph.image || "";
+    if (ogTitle) ogTitle.value = openGraph.title || "";
+    if (ogDescription) ogDescription.value = openGraph.description || "";
+    if (ogType) ogType.value = openGraph.type || "";
+    if (ogSiteName) ogSiteName.value = openGraph.site_name || "";
+    if (ogImage) ogImage.value = openGraph.image || "";
 
-    twitterCard.value = twitter.card || "";
-    twitterTitle.value = twitter.title || "";
-    twitterDescription.value = twitter.description || "";
-    twitterImage.value = twitter.image || "";
+    if (twitterCard) twitterCard.value = twitter.card || "";
+    if (twitterTitle) twitterTitle.value = twitter.title || "";
+    if (twitterDescription)
+      twitterDescription.value = twitter.description || "";
+    if (twitterImage) twitterImage.value = twitter.image || "";
 
-    jsonldContext.value = jsonld["@context"] || "";
-    jsonldType.value = jsonld["@type"] || "";
-    jsonldName.value = jsonld.name || "";
-    jsonldDescription.value = jsonld.description || "";
-    jsonldImage.value = jsonld.image || "";
-    jsonldSameAs.value = (jsonld.sameAs || []).join("\n");
+    if (jsonldContext) jsonldContext.value = jsonld["@context"] || "";
+    if (jsonldType) jsonldType.value = jsonld["@type"] || "";
+    if (jsonldName) jsonldName.value = jsonld.name || "";
+    if (jsonldDescription) jsonldDescription.value = jsonld.description || "";
+    if (jsonldImage) jsonldImage.value = jsonld.image || "";
+    if (jsonldSameAs) jsonldSameAs.value = (jsonld.sameAs || []).join("\n");
 
-    footerSummary.value = footer.summary || "";
-    footerLinks.value = footerLinksToText(footer.links || []);
-    footerCopyrightYear.value = footer.copyright_year || "";
-    footerCreditLabel.value = credit.label || "";
-    footerCreditUrl.value = credit.url || "";
-    footerCreditText.value = credit.text || "";
+    if (footerSummary) footerSummary.value = footer.summary || "";
+    if (footerLinks) footerLinks.value = footerLinksToText(footer.links || []);
+    if (footerCopyrightYear)
+      footerCopyrightYear.value = footer.copyright_year || "";
+    if (footerCreditLabel) footerCreditLabel.value = credit.label || "";
+    if (footerCreditUrl) footerCreditUrl.value = credit.url || "";
+    if (footerCreditText) footerCreditText.value = credit.text || "";
   };
 
   const syncMetaFromFields = () => {
+    if (!metaTitle) return;
     const data = getMetaData();
     const openGraph = ensureMetaSection("open_graph");
     const twitter = ensureMetaSection("twitter");
@@ -691,33 +727,34 @@
         : (footer.credit = {});
 
     data.title = metaTitle.value;
-    data.description = metaDescription.value;
-    data.keywords = normalizeLines(metaKeywords.value);
+    if (metaDescription) data.description = metaDescription.value;
+    if (metaKeywords) data.keywords = normalizeLines(metaKeywords.value);
 
-    openGraph.title = ogTitle.value;
-    openGraph.description = ogDescription.value;
-    openGraph.type = ogType.value;
-    openGraph.site_name = ogSiteName.value;
-    openGraph.image = ogImage.value;
+    if (ogTitle) openGraph.title = ogTitle.value;
+    if (ogDescription) openGraph.description = ogDescription.value;
+    if (ogType) openGraph.type = ogType.value;
+    if (ogSiteName) openGraph.site_name = ogSiteName.value;
+    if (ogImage) openGraph.image = ogImage.value;
 
-    twitter.card = twitterCard.value;
-    twitter.title = twitterTitle.value;
-    twitter.description = twitterDescription.value;
-    twitter.image = twitterImage.value;
+    if (twitterCard) twitter.card = twitterCard.value;
+    if (twitterTitle) twitter.title = twitterTitle.value;
+    if (twitterDescription) twitter.description = twitterDescription.value;
+    if (twitterImage) twitter.image = twitterImage.value;
 
-    jsonld["@context"] = jsonldContext.value;
-    jsonld["@type"] = jsonldType.value;
-    jsonld.name = jsonldName.value;
-    jsonld.description = jsonldDescription.value;
-    jsonld.image = jsonldImage.value;
-    jsonld.sameAs = normalizeLines(jsonldSameAs.value);
+    if (jsonldContext) jsonld["@context"] = jsonldContext.value;
+    if (jsonldType) jsonld["@type"] = jsonldType.value;
+    if (jsonldName) jsonld.name = jsonldName.value;
+    if (jsonldDescription) jsonld.description = jsonldDescription.value;
+    if (jsonldImage) jsonld.image = jsonldImage.value;
+    if (jsonldSameAs) jsonld.sameAs = normalizeLines(jsonldSameAs.value);
 
-    footer.summary = footerSummary.value;
-    footer.links = parseFooterLinks(footerLinks.value);
-    footer.copyright_year = Number(footerCopyrightYear.value) || 0;
-    credit.label = footerCreditLabel.value;
-    credit.url = footerCreditUrl.value;
-    credit.text = footerCreditText.value;
+    if (footerSummary) footer.summary = footerSummary.value;
+    if (footerLinks) footer.links = parseFooterLinks(footerLinks.value);
+    if (footerCopyrightYear)
+      footer.copyright_year = Number(footerCopyrightYear.value) || 0;
+    if (footerCreditLabel) credit.label = footerCreditLabel.value;
+    if (footerCreditUrl) credit.url = footerCreditUrl.value;
+    if (footerCreditText) credit.text = footerCreditText.value;
   };
 
   const deleteSection = (index) => {
@@ -747,23 +784,36 @@
     try {
       contentData = JSON.parse(savedJson);
     } catch (err) {
-      setStatus("Cannot load editor: invalid JSON payload.", true);
+      if (isContentPage) {
+        setStatus("Cannot load editor: invalid JSON payload.", true);
+      }
       return;
     }
 
     try {
       metaData = JSON.parse(savedMetaJson);
     } catch (err) {
-      setSaveStatus("Cannot load metadata editor: invalid JSON payload.", true);
+      if (isMetaPage) {
+        setSaveStatus(
+          "Cannot load metadata editor: invalid JSON payload.",
+          true,
+        );
+      }
       return;
     }
 
-    renderHeroFields();
-    renderMetaFields();
-    refreshPageSelector();
-    selectedSectionIndex = -1;
-    refreshSectionList();
-    renderSelectedSection();
+    if (isContentPage) {
+      renderHeroFields();
+      refreshPageSelector();
+      selectedSectionIndex = -1;
+      refreshSectionList();
+      renderSelectedSection();
+    }
+
+    if (isMetaPage) {
+      renderMetaFields();
+    }
+
     markUnsaved();
   };
 
@@ -828,101 +878,42 @@
     setStatus("Applied full section changes to JSON payload.");
   };
 
-  toolbarButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const command = button.getAttribute("data-editor-cmd");
-      if (!command) {
-        return;
-      }
-      richEditor.focus();
-      document.execCommand(command, false);
-    });
-  });
-
-  linkButton.addEventListener("click", () => {
-    const url = window.prompt("Link URL:", "https://");
-    if (!url) {
-      return;
-    }
-    richEditor.focus();
-    document.execCommand("createLink", false, url);
-  });
-
-  imageButton.addEventListener("click", () => {
-    openImageDialog();
-  });
-
-  const openImageDialog = () => {
-    const dialog = document.createElement("div");
-    dialog.className = "image-dialog active";
-    dialog.innerHTML = `
-        <div class="image-dialog-content">
-          <div class="image-dialog-header">
-            <h3>Insert Image</h3>
-            <button type="button" class="image-dialog-close">Close</button>
-          </div>
-          <div class="image-dialog-grid" id="image_dialog_grid"></div>
-        </div>
-      `;
-    document.body.appendChild(dialog);
-
-    const closeButton = dialog.querySelector(".image-dialog-close");
-    closeButton.addEventListener("click", () => {
-      document.body.removeChild(dialog);
-    });
-
-    const grid = dialog.querySelector("#image_dialog_grid");
-    fetch("/static/images/")
-      .then((resp) => resp.text())
-      .then((html) => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-        const links = doc.querySelectorAll("a");
-        links.forEach((link) => {
-          const href = link.getAttribute("href");
-          if (
-            href &&
-            (href.endsWith(".jpg") ||
-              href.endsWith(".png") ||
-              href.endsWith(".gif"))
-          ) {
-            const img = document.createElement("img");
-            img.src = "/static/images/" + href;
-            img.alt = href;
-            img.style.cursor = "pointer";
-            img.addEventListener("click", () => {
-              const alt = window.prompt("Image alt text:", "") || "";
-              richEditor.focus();
-              document.execCommand(
-                "insertHTML",
-                false,
-                `<p><img src="/static/images/${href}" alt="${escapeAttr(alt)}"></p>`,
-              );
-              document.body.removeChild(dialog);
-            });
-            const item = document.createElement("div");
-            item.className = "image-dialog-grid-item";
-            item.appendChild(img);
-            grid.appendChild(item);
-          }
-        });
+  if (isContentPage) {
+    toolbarButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const command = button.getAttribute("data-editor-cmd");
+        if (!command) {
+          return;
+        }
+        if (richEditor) richEditor.focus();
+        if (richEditor) document.execCommand(command, false);
       });
-  };
+    });
 
-  pageSelector.addEventListener("change", () => {
-    selectedSectionIndex = -1;
-    refreshSectionList();
-    renderSelectedSection();
-    setStatus(`Page switched to '${getCurrentPageName()}'.`);
-  });
-  reloadButton.addEventListener("click", loadFromJson);
-  applyButton.addEventListener("click", applyEditorToJson);
-  sectionAddButton.addEventListener("click", addSection);
-  sectionRenameButton.addEventListener("click", renameSection);
-  previewRefreshButton.addEventListener("click", refreshPreview);
-  saveBtn.addEventListener("click", saveContent);
+    if (linkButton) {
+      linkButton.addEventListener("click", () => {
+        const url = window.prompt("Link URL:", "https://");
+        if (!url) {
+          return;
+        }
+        if (richEditor) richEditor.focus();
+        if (richEditor) document.execCommand("createLink", false, url);
+      });
+    }
+
+    if (imageButton) {
+      imageButton.addEventListener("click", () => {
+        window.open(
+          "/admin/gallery?picker=1",
+          "galleryPicker",
+          "width=980,height=720",
+        );
+      });
+    }
+  }
 
   const handleHeroInput = () => {
+    if (!heroEyebrow || !heroTitle || !heroIntro) return;
     const hero = getHeroData();
     hero.eyebrow = heroEyebrow.value;
     hero.title = heroTitle.value;
@@ -931,9 +922,26 @@
     refreshPreview();
   };
 
-  heroEyebrow.addEventListener("input", handleHeroInput);
-  heroTitle.addEventListener("input", handleHeroInput);
-  heroIntro.addEventListener("input", handleHeroInput);
+  if (pageSelector) {
+    pageSelector.addEventListener("change", () => {
+      selectedSectionIndex = -1;
+      refreshSectionList();
+      renderSelectedSection();
+      setStatus(`Page switched to '${getCurrentPageName()}'.`);
+    });
+  }
+  if (reloadButton) reloadButton.addEventListener("click", loadFromJson);
+  if (applyButton) applyButton.addEventListener("click", applyEditorToJson);
+  if (sectionAddButton) sectionAddButton.addEventListener("click", addSection);
+  if (sectionRenameButton)
+    sectionRenameButton.addEventListener("click", renameSection);
+  if (previewRefreshButton)
+    previewRefreshButton.addEventListener("click", refreshPreview);
+  if (saveBtn) saveBtn.addEventListener("click", saveContent);
+
+  if (heroEyebrow) heroEyebrow.addEventListener("input", handleHeroInput);
+  if (heroTitle) heroTitle.addEventListener("input", handleHeroInput);
+  if (heroIntro) heroIntro.addEventListener("input", handleHeroInput);
 
   const metaInputs = [
     metaTitle,
@@ -960,7 +968,7 @@
     footerCreditLabel,
     footerCreditUrl,
     footerCreditText,
-  ];
+  ].filter(Boolean);
 
   const handleMetaInput = () => {
     syncMetaFromFields();
@@ -971,83 +979,25 @@
     input.addEventListener("input", handleMetaInput);
   });
 
-  imageUploadInput.addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    uploadStatus.textContent = "Uploading...";
-
-    fetch("/admin/upload", {
-      method: "POST",
-      body: formData,
-      headers: {
-        Authorization: "Basic " + btoa("admin:admin"),
-      },
-    })
-      .then((resp) => {
-        if (resp.ok) {
-          uploadStatus.textContent = "Upload successful!";
-          setTimeout(() => {
-            uploadStatus.textContent = "";
-          }, 2000);
-          refreshImageGallery();
-        } else {
-          uploadStatus.textContent = "Upload failed.";
-        }
-      })
-      .catch((err) => {
-        uploadStatus.textContent = "Upload error: " + err.message;
-      });
+  window.addEventListener("message", (event) => {
+    if (event.origin !== window.location.origin) return;
+    const image = event.data?.galleryImage;
+    if (!image?.filename || !richEditor) return;
+    const alt = image.caption || "";
+    richEditor.focus();
+    document.execCommand(
+      "insertHTML",
+      false,
+      `<p><img src="/static/images/${escapeAttr(image.filename)}" alt="${escapeAttr(alt)}"></p>`,
+    );
   });
 
   window.addEventListener("beforeunload", (e) => {
-    if (unsavedBadge.classList.contains("visible")) {
+    if (unsavedBadge && unsavedBadge.classList.contains("visible")) {
       e.preventDefault();
     }
   });
 
-  const refreshImageGallery = () => {
-    fetch("/static/images/")
-      .then((resp) => resp.text())
-      .then((html) => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-        const links = doc.querySelectorAll("a");
-        imageGallery.innerHTML = "";
-        links.forEach((link) => {
-          const href = link.getAttribute("href");
-          if (
-            href &&
-            (href.endsWith(".jpg") ||
-              href.endsWith(".png") ||
-              href.endsWith(".gif"))
-          ) {
-            const img = document.createElement("img");
-            img.src = "/static/images/" + href;
-            img.alt = href;
-            img.style.cursor = "pointer";
-            img.addEventListener("click", () => {
-              const alt = window.prompt("Image alt text:", "") || "";
-              richEditor.focus();
-              document.execCommand(
-                "insertHTML",
-                false,
-                `<p><img src="/static/images/${href}" alt="${escapeAttr(alt)}"></p>`,
-              );
-            });
-            const item = document.createElement("div");
-            item.className = "image-gallery-item";
-            item.appendChild(img);
-            imageGallery.appendChild(item);
-          }
-        });
-      });
-  };
-
   loadFromJson();
   initializeSidebarTracking();
-  refreshImageGallery();
 })();

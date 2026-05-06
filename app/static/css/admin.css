@@ -23,19 +23,43 @@ main {
   align-items: start;
 }
 
+.admin-layout > .admin-sidebar,
+.admin-layout > .admin-preview-column {
+  align-self: start;
+}
+
 .admin-main {
   display: grid;
   gap: 1.25rem;
 }
 
+.admin-overview-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.admin-overview-links a {
+  display: inline-block;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  background: rgba(17, 21, 40, 0.76);
+  border: 1px solid rgba(125, 211, 252, 0.22);
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+}
+
 .admin-preview-column {
   position: sticky;
   top: 1.5rem;
+  z-index: 10;
 }
 
 .admin-sidebar {
   position: sticky;
   top: 1.5rem;
+  z-index: 10;
 }
 
 .admin-sidebar-nav {
@@ -415,6 +439,59 @@ button:focus-visible {
   object-fit: cover;
 }
 
+.gallery-editor-grid {
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
+
+.gallery-editor-item {
+  aspect-ratio: auto;
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.65rem;
+}
+
+.gallery-editor-item img {
+  aspect-ratio: 1;
+  border-radius: 6px;
+}
+
+.gallery-editor-item textarea {
+  min-height: 4.5rem;
+  resize: vertical;
+}
+
+.gallery-item-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.gallery-item-actions span {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gallery-item-actions button {
+  padding: 0.4rem 0.55rem;
+  font-size: 0.8rem;
+}
+
+.gallery-picker-mode #admin-upload,
+.gallery-picker-mode #admin-save,
+.gallery-picker-mode .gallery-editor-item textarea,
+.gallery-picker-mode .gallery-item-actions {
+  display: none;
+}
+
+.gallery-picker-mode .gallery-editor-item {
+  cursor: pointer;
+}
+
 .image-gallery-item.selected {
   border: 2px solid var(--accent-strong);
 }
@@ -428,6 +505,15 @@ button:focus-visible {
 
 .image-upload-form input[type="file"] {
   display: none;
+}
+
+.image-upload-form input[type="text"] {
+  min-width: min(22rem, 100%);
+  border: 1px solid rgba(125, 211, 252, 0.22);
+  border-radius: 8px;
+  padding: 0.55rem 0.65rem;
+  background: var(--surface-strong);
+  color: var(--text);
 }
 
 .image-upload-label {
@@ -597,4 +683,16 @@ button:focus-visible {
   min-height: 1.2rem;
   font-size: 0.9rem;
   color: var(--muted);
+}
+
+#save_btn.unsaved {
+  background: #f59e0b;
+  color: #1f2937;
+  border-color: #d97706;
+  animation: pulse-save 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-save {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
 }

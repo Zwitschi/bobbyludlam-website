@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    {% block title %}
+    <title>Admin Dashboard</title>
+    {% endblock %}
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/site.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin.css') }}"
+    />
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body data-admin-page="{{ active_section }}">
+    <div class="admin-layout">
+      <aside class="admin-sidebar panel">
+        {% include "admin/admin_navigation.html" %}
+      </aside>
+
+      <div class="admin-main">{% block admin_content %}{% endblock %}</div>
+
+      {% block admin_preview %}
+      <section class="panel admin-preview-column" id="admin-preview">
+        <h2>Live Preview</h2>
+        <p class="help">
+          Refresh preview to inspect current in-memory content.
+        </p>
+        <div class="save-bar">
+          <button type="button" id="preview_refresh">Refresh Preview</button>
+          <span id="preview_status" class="help"></span>
+        </div>
+        <iframe
+          id="preview_frame"
+          title="Live preview"
+          class="image-editor-preview"
+        ></iframe>
+      </section>
+      {% endblock %}
+    </div>
+
+    {% block extra_body %}
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+    {% endblock %}
+  </body>
+</html>
