@@ -12,6 +12,15 @@
   {% endif %}
 </section>
 
+<section class="panel" id="admin-common-meta">
+  <h2>Common Metadata</h2>
+  <p class="help">
+    Edit shared fields that propagate to Open Graph, Twitter, and JSON-LD
+    sections.
+  </p>
+  {% include "admin/partials/_meta_common.html" %}
+</section>
+
 <section class="panel" id="admin-meta">
   <h2>Basic Metadata</h2>
   <p class="help">Edit core metadata stored in `siteMeta.json`.</p>
@@ -24,22 +33,29 @@
   {% include "admin/partials/_meta_basic.html" %}
 </section>
 
-<section class="panel" id="admin-open-graph">
-  <h2>Open Graph</h2>
-  <p class="help">Edit social metadata used for Open Graph previews.</p>
-  {% include "admin/partials/_meta_og.html" %}
-</section>
-
-<section class="panel" id="admin-twitter">
-  <h2>Twitter Card</h2>
-  <p class="help">Edit metadata used for Twitter card previews.</p>
-  {% include "admin/partials/_meta_twitter.html" %}
-</section>
-
 <section class="panel" id="admin-jsonld">
   <h2>JSON-LD</h2>
   <p class="help">Edit structured data fields stored in `siteMeta.json`.</p>
   {% include "admin/partials/_meta_jsonld.html" %}
+</section>
+
+<section class="panel" id="admin-common-image">
+  <h2>Common Image</h2>
+  <p class="help">
+    Shared image used across OG, Twitter, and JSON-LD sections.
+  </p>
+  <div class="editor-grid">
+    <div class="editor-row">
+      <label for="common_image">Image URL</label>
+      <input id="common_image" type="text" placeholder="images/example.jpg" />
+    </div>
+  </div>
+</section>
+
+<section class="panel" id="admin-open-graph">
+  <h2>Open Graph</h2>
+  <p class="help">Edit social metadata used for Open Graph previews.</p>
+  {% include "admin/partials/_meta_og.html" %}
 </section>
 
 <section class="panel" id="admin-footer">
@@ -60,4 +76,6 @@
     <span id="save_status" class="help"></span>
   </div>
 </section>
+{% endblock %} {% block page_script %}
+<script src="{{ url_for('static', filename='js/admin/meta.js') }}"></script>
 {% endblock %}

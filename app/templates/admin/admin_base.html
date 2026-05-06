@@ -44,8 +44,7 @@
       {% endblock %}
     </div>
 
-    {% block extra_body %}
-    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
-    {% endblock %}
+    <script src="{{ url_for('static', filename='js/admin/common.js') }}"></script>
+    {% block page_script %}{% endblock %}
   </body>
 </html>

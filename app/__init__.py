@@ -61,6 +61,14 @@ def _load_site_content(app: Flask) -> dict[str, object]:
 
 def _default_site_meta() -> dict[str, object]:
     return {
+        "common": {
+            "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
+            "description": (
+                "Bobby Ludlam is an Austin comedian, writer, artist, and creator "
+                "working across stand-up, film, and creative projects."
+            ),
+            "image": "images/bobby-ludlam-austin-1.jpg",
+        },
         "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
         "description": (
             "Bobby Ludlam is an Austin comedian, writer, artist, and creator "
@@ -78,33 +86,15 @@ def _default_site_meta() -> dict[str, object]:
             "comedy documentary",
         ],
         "open_graph": {
-            "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
-            "description": (
-                "Bobby Ludlam is an Austin comedian, writer, artist, and "
-                "creator working across stand-up, film, and creative projects."
-            ),
             "type": "website",
             "site_name": "Bobby Ludlam",
-            "image": "images/bobby-ludlam-austin-1.jpg",
         },
         "twitter": {
             "card": "summary_large_image",
-            "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
-            "description": (
-                "Bobby Ludlam is an Austin comedian, writer, artist, and "
-                "creator working across stand-up, film, and creative projects."
-            ),
-            "image": "images/bobby-ludlam-austin-1.jpg",
         },
         "jsonld": {
             "@context": "https://schema.org",
             "@type": "Person",
-            "name": "Bobby Ludlam",
-            "description": (
-                "Bobby Ludlam is an Austin comedian, writer, artist, and "
-                "creator working across stand-up, film, and creative projects."
-            ),
-            "image": "images/bobby-ludlam-austin-1.jpg",
             "sameAs": [
                 "https://www.instagram.com/thebobbyludlam/",
                 "https://bobbyludlam.com/",

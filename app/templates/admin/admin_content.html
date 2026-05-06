@@ -26,11 +26,7 @@
     </div>
     <div class="editor-row">
       <label for="hero_intro">Intro</label>
-      <textarea
-        id="hero_intro"
-        rows="4"
-        placeholder="Hero intro copy"
-      ></textarea>
+      <input id="hero_intro" type="text" placeholder="Hero intro copy" />
     </div>
   </div>
 </section>
@@ -109,4 +105,6 @@
     <span id="save_status" class="help"></span>
   </div>
 </section>
+{% endblock %} {% block page_script %}
+<script src="{{ url_for('static', filename='js/admin/content.js') }}"></script>
 {% endblock %}

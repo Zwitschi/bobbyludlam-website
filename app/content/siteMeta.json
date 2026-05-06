@@ -1,4 +1,9 @@
 {
+  "common": {
+    "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
+    "description": "Bobby Ludlam is an Austin comedian, writer, artist, and creator working across stand-up, film, and creative projects.",
+    "image": "images/bobby-ludlam-austin-1.jpg"
+  },
   "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
   "description": "Bobby Ludlam is an Austin comedian, writer, artist, and creator working across stand-up, film, and creative projects.",
   "keywords": [
@@ -15,24 +20,15 @@
     "comedy documentary"
   ],
   "open_graph": {
-    "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
-    "description": "Bobby Ludlam is an Austin comedian, writer, artist, and creator working across stand-up, film, and creative projects.",
     "type": "website",
-    "site_name": "Bobby Ludlam",
-    "image": "images/bobby-ludlam-austin-1.jpg"
+    "site_name": "Bobby Ludlam"
   },
   "twitter": {
-    "card": "summary_large_image",
-    "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
-    "description": "Bobby Ludlam is an Austin comedian, writer, artist, and creator working across stand-up, film, and creative projects.",
-    "image": "images/bobby-ludlam-austin-1.jpg"
+    "card": "summary_large_image"
   },
   "jsonld": {
     "@context": "https://schema.org",
     "@type": "Person",
-    "name": "Bobby Ludlam",
-    "description": "Bobby Ludlam is an Austin comedian, writer, artist, and creator working across stand-up, film, and creative projects.",
-    "image": "images/bobby-ludlam-austin-1.jpg",
     "sameAs": [
       "https://www.instagram.com/thebobbyludlam/",
       "https://bobbyludlam.com/"

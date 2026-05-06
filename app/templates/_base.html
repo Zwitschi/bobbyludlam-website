@@ -4,37 +4,38 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% set og = site_meta.open_graph %} {% set twitter = site_meta.twitter %} {%
-    set jsonld = site_meta.jsonld %} {% block title %}
-    <title>{{ site_meta.title }}</title>
+    set jsonld = site_meta.jsonld %} {% set common = site_meta.common or {} %}
+    {% block title %}
+    <title>{{ common.title }}</title>
     {% endblock %} {% block meta_description %}
-    <meta name="description" content="{{ site_meta.description }}" />
+    <meta name="description" content="{{ common.description }}" />
     {% endblock %} {% block meta_keywords %}
     <meta name="keywords" content="{{ site_meta.keywords | join(', ') }}" />
     {% endblock %} {% block meta_og %}
-    <meta property="og:title" content="{{ og.title }}" />
-    <meta property="og:description" content="{{ og.description }}" />
+    <meta property="og:title" content="{{ common.title }}" />
+    <meta property="og:description" content="{{ common.description }}" />
     <meta property="og:type" content="{{ og.type }}" />
     <meta property="og:site_name" content="{{ og.site_name }}" />
     <meta
       property="og:image"
-      content="{{ url_for('static', filename=og.image, _external=True) }}"
+      content="{{ url_for('static', filename=common.image, _external=True) }}"
     />
     {% endblock %} {% block meta_twitter %}
     <meta name="twitter:card" content="{{ twitter.card }}" />
-    <meta name="twitter:title" content="{{ twitter.title }}" />
-    <meta name="twitter:description" content="{{ twitter.description }}" />
+    <meta name="twitter:title" content="{{ common.title }}" />
+    <meta name="twitter:description" content="{{ common.description }}" />
     <meta
       name="twitter:image"
-      content="{{ url_for('static', filename=twitter.image, _external=True) }}"
+      content="{{ url_for('static', filename=common.image, _external=True) }}"
     />
     {% endblock %} {% block meta_jsonld %}
     <script type="application/ld+json">
       {
         "@context": "{{ jsonld['@context'] }}",
         "@type": "{{ jsonld['@type'] }}",
-        "name": "{{ jsonld.name }}",
-        "description": "{{ jsonld.description }}",
-        "image": "{{ url_for('static', filename=jsonld.image, _external=True) }}",
+        "name": "{{ common.title }}",
+        "description": "{{ common.description }}",
+        "image": "{{ url_for('static', filename=common.image, _external=True) }}",
         "sameAs": [
           {%- for url in jsonld.sameAs -%}
           "{{ url }}"{% if not loop.last %},{% endif %}

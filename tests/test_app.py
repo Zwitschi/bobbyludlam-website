@@ -213,7 +213,7 @@ def test_admin_routes_exist() -> None:
     assert 'href="#admin-jsonld"' in dashboard.get_data(as_text=True)
     assert 'href="#admin-footer"' in dashboard.get_data(as_text=True)
     assert "initial_meta_json" in dashboard.get_data(as_text=True)
-    assert "og_title" in dashboard.get_data(as_text=True)
+    assert "common_title" in dashboard.get_data(as_text=True)
     assert "footer_summary" in dashboard.get_data(as_text=True)
     assert "twitter_card" in dashboard.get_data(as_text=True)
     assert "jsonld_same_as" in dashboard.get_data(as_text=True)

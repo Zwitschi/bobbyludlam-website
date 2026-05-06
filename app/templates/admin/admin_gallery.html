@@ -1,9 +1,9 @@
-{% extends "admin/admin_base.html" %}
-
-{% block admin_content %}
+{% extends "admin/admin_base.html" %} {% block admin_content %}
 <section class="panel" id="admin-overview">
   <h1>Admin Dashboard — Gallery</h1>
-  <p>Upload images, edit captions, reorder the gallery, and remove unused files.</p>
+  <p>
+    Upload images, edit captions, reorder the gallery, and remove unused files.
+  </p>
 </section>
 
 <section class="panel" id="admin-upload">
@@ -12,7 +12,9 @@
 
 <section class="panel" id="admin-gallery-grid">
   <h2>Images</h2>
-  <p class="help">Drag images to reorder. Captions are saved to `gallery.json`.</p>
+  <p class="help">
+    Drag images to reorder. Captions are saved to `gallery.json`.
+  </p>
   <script id="initial_gallery_json" type="application/json">
     {{ gallery|tojson }}
   </script>
@@ -31,6 +33,6 @@
 
 {% block admin_preview %}{% endblock %}
 
-{% block extra_body %}
-<script src="{{ url_for('static', filename='js/gallery.js') }}"></script>
+{% block page_script %}
+<script src="{{ url_for('static', filename='js/admin/gallery.js') }}"></script>
 {% endblock %}

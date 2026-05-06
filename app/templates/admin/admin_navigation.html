@@ -6,34 +6,28 @@
     >Content</a
   >
   <a
-    href="{{ url_for('admin_gallery') }}"
-    class="{% if active_section == 'gallery' %}active{% endif %}"
-    >Gallery</a
-  >
-  <a
     href="{{ url_for('admin_meta') }}"
     class="{% if active_section == 'meta' %}active{% endif %}"
     >Meta</a
   >
+  <a
+    href="{{ url_for('admin_gallery') }}"
+    class="{% if active_section == 'gallery' %}active{% endif %}"
+    >Gallery</a
+  >
   <hr />
   {% if active_section == 'content' %}
-  <a href="#admin-overview">Overview</a>
   <a href="#admin-hero">Hero Content</a>
   <a href="#admin-sections">Content Sections</a>
-  <a href="#admin-save">Save</a>
   {% elif active_section == 'gallery' %}
-  <a href="#admin-overview">Overview</a>
   <a href="#admin-upload">Upload</a>
   <a href="#admin-gallery-grid">Images</a>
-  <a href="#admin-save">Save</a>
   {% elif active_section == 'meta' %}
-  <a href="#admin-overview">Overview</a>
-  <a href="#admin-preview">Live Preview</a>
   <a href="#admin-meta">Basic Metadata</a>
   <a href="#admin-open-graph">Open Graph</a>
   <a href="#admin-twitter">Twitter Card</a>
   <a href="#admin-jsonld">JSON-LD</a>
   <a href="#admin-footer">Footer Content</a>
-  <a href="#admin-save">Save</a>
   {% endif %}
+  <a href="#admin-save">Save</a>
 </nav>
