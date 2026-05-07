@@ -14,16 +14,11 @@
 
 <section class="panel" id="admin-common-meta">
   <h2>Common Metadata</h2>
-  <p class="help">
-    Edit shared fields that propagate to Open Graph, Twitter, and JSON-LD
-    sections.
-  </p>
   {% include "admin/partials/_meta_common.html" %}
 </section>
 
 <section class="panel" id="admin-meta">
   <h2>Basic Metadata</h2>
-  <p class="help">Edit core metadata stored in `siteMeta.json`.</p>
   <script id="initial_meta_json" type="application/json">
     {{ meta_json|safe }}
   </script>
@@ -35,14 +30,13 @@
 
 <section class="panel" id="admin-jsonld">
   <h2>JSON-LD</h2>
-  <p class="help">Edit structured data fields stored in `siteMeta.json`.</p>
   {% include "admin/partials/_meta_jsonld.html" %}
 </section>
 
 <section class="panel" id="admin-common-image">
   <h2>Common Image</h2>
   <p class="help">
-    Shared image used across OG, Twitter, and JSON-LD sections.
+    Shared image used across Open Graph, Twitter, and JSON-LD sections.
   </p>
   <div class="editor-grid">
     <div class="editor-row">
@@ -59,8 +53,7 @@
 </section>
 
 <section class="panel" id="admin-footer">
-  <h2>Footer Content</h2>
-  <p class="help">Edit footer copy and links stored in `siteMeta.json`.</p>
+  <h2>Site Footer Content</h2>
   {% include "admin/partials/_meta_footer.html" %}
 </section>
 
