@@ -1,5 +1,7 @@
 :root {
   color-scheme: dark;
+  --grid-spacing: 1.25rem;
+  --meta-grid-spacing: 0.625rem;
 }
 
 body {
@@ -20,7 +22,7 @@ body[data-admin-page] main {
       320px,
       28rem
     );
-  gap: 1.25rem;
+  gap: var(--grid-spacing);
   align-items: start;
 }
 
@@ -153,12 +155,36 @@ textarea {
 
 .editor-grid {
   display: grid;
-  gap: 0.75rem;
+  gap: var(--meta-grid-spacing);
 }
 
 .editor-row {
   display: grid;
-  gap: 0.5rem;
+  gap: var(--meta-grid-spacing);
+}
+
+.info-row {
+  display: flex;
+  gap: var(--meta-grid-spacing);
+  color: var(--muted);
+}
+
+.info-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.info-value {
+  font-size: 0.88rem;
+  color: var(--text);
+}
+
+#footer_copyright_year {
+  max-width: 6rem;
+}
+#footer_credit_url,
+#footer_credit_label {
+  max-width: 12rem;
 }
 
 .editor-row label {
@@ -714,29 +740,28 @@ button:focus-visible {
   flex: 0 0 100%;
 }
 
-.admin-main:has(#admin-common-meta) #admin-common-meta {
-  flex: 0 0 calc(50% - 0.625rem);
-  min-width: 0;
-}
-
-.admin-main:has(#admin-common-meta) #admin-common-image {
-  flex: 0 0 calc(25% - 0.625rem);
-  min-width: 0;
-}
-
-.admin-main:has(#admin-common-meta) #admin-meta {
-  flex: 0 0 calc(25% - 0.625rem);
-  min-width: 0;
-}
-
-.admin-main:has(#admin-common-meta) #admin-open-graph,
-.admin-main:has(#admin-common-meta) #admin-twitter,
+.admin-main:has(#admin-common-meta) #admin-common-meta,
 .admin-main:has(#admin-common-meta) #admin-jsonld {
-  flex: 0 0 calc(25% - 0.625rem);
+  flex: 0 0 calc(33% - var(--meta-grid-spacing));
   min-width: 0;
 }
 
 .admin-main:has(#admin-common-meta) #admin-footer,
+.admin-main:has(#admin-common-meta) #admin-common-image {
+  flex: 0 0 calc(33% - var(--meta-grid-spacing));
+  min-width: 0;
+}
+
+.admin-main:has(#admin-common-meta) #admin-meta {
+  flex: 0 0 calc(33% - var(--meta-grid-spacing));
+  min-width: 0;
+}
+
+.admin-main:has(#admin-common-meta) #admin-open-graph {
+  flex: 0 0 calc(33% - var(--meta-grid-spacing));
+  min-width: 0;
+}
+
 .admin-main:has(#admin-common-meta) #admin-save {
   flex: 0 0 100%;
 }
@@ -747,17 +772,16 @@ button:focus-visible {
   }
 
   .admin-main:has(#admin-common-meta) #admin-common-image {
-    flex: 0 0 calc(50% - 0.625rem);
+    flex: 0 0 calc(50% - var(--meta-grid-spacing));
   }
 
   .admin-main:has(#admin-common-meta) #admin-meta {
-    flex: 0 0 calc(50% - 0.625rem);
+    flex: 0 0 calc(50% - var(--meta-grid-spacing));
   }
 
   .admin-main:has(#admin-common-meta) #admin-open-graph,
-  .admin-main:has(#admin-common-meta) #admin-twitter,
   .admin-main:has(#admin-common-meta) #admin-jsonld {
-    flex: 0 0 calc(50% - 0.625rem);
+    flex: 0 0 calc(50% - var(--meta-grid-spacing));
   }
 }
 
@@ -766,7 +790,6 @@ button:focus-visible {
   .admin-main:has(#admin-common-meta) #admin-common-image,
   .admin-main:has(#admin-common-meta) #admin-meta,
   .admin-main:has(#admin-common-meta) #admin-open-graph,
-  .admin-main:has(#admin-common-meta) #admin-twitter,
   .admin-main:has(#admin-common-meta) #admin-jsonld,
   .admin-main:has(#admin-common-meta) #admin-footer,
   .admin-main:has(#admin-common-meta) #admin-save {
