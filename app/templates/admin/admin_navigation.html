@@ -1,17 +1,17 @@
 <h2>Admin Nav</h2>
 <nav class="admin-sidebar-nav" aria-label="Admin sections">
   <a
-    href="{{ url_for('admin_content') }}"
+    href="{{ url_for('admin.admin_content') }}"
     class="{% if active_section == 'content' %}active{% endif %}"
     >Content</a
   >
   <a
-    href="{{ url_for('admin_meta') }}"
+    href="{{ url_for('admin.admin_meta') }}"
     class="{% if active_section == 'meta' %}active{% endif %}"
     >Meta</a
   >
   <a
-    href="{{ url_for('admin_gallery') }}"
+    href="{{ url_for('admin.admin_gallery') }}"
     class="{% if active_section == 'gallery' %}active{% endif %}"
     >Gallery</a
   >

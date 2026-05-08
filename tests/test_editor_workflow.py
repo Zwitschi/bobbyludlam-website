@@ -1,6 +1,6 @@
 import pytest
 from run import app
-import app as app_module
+import app.utils as app_module
 import json
 import sys
 from pathlib import Path

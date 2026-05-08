@@ -38,27 +38,35 @@
     delete.
   </p>
   <div class="editor-grid">
-    <div class="editor-row">
-      <label for="page_selector">Page</label>
-      <select id="page_selector"></select>
+    <div class="editor-row" id="top_row">
+      <div class="editor-row" id="page_selector_row">
+        <label for="page_selector">Page</label>
+        <select id="page_selector"></select>
+      </div>
+      <div class="editor-row" id="section_heading_row">
+        <label for="section_heading">Section heading</label>
+        <input id="section_heading" type="text" placeholder="Section heading" />
+      </div>
     </div>
-
-    <ul id="section_list" class="section-list"></ul>
-
-    <div class="editor-row">
-      <label for="section_heading">Section heading</label>
-      <input id="section_heading" type="text" placeholder="Section heading" />
+    <div id="content_selection_left_column">
+      <ul id="section_list" class="section-list"></ul>
     </div>
-
-    <div class="section-actions" aria-label="Section actions">
-      <button type="button" id="section_add">Add Section</button>
-      <button type="button" id="section_rename">Update Heading</button>
+    <div id="content_selection_right_column">
+      <div
+        class="section-actions"
+        aria-label="Section actions"
+        id="section_actions"
+      >
+        <button type="button" id="section_add">Add Section</button>
+        <button type="button" id="section_rename">Update Heading</button>
+      </div>
     </div>
   </div>
   <p class="help">
     Select a section, edit all of its content below, then apply changes to that
     full section.
   </p>
+  <hr />
   <div class="editor-grid">
     <div class="toolbar" aria-label="Rich text tools">
       <button type="button" data-editor-cmd="bold">

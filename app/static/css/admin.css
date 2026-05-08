@@ -159,10 +159,55 @@ textarea {
 }
 
 .editor-row {
+  display: flex;
+  gap: var(--meta-grid-spacing);
+  flex-wrap: wrap;
+}
+
+/* Hero Content Editor */
+#hero_eyebrow,
+#hero_title {
+  max-width: 20rem;
+}
+#hero_intro {
+  max-width: 80%;
+}
+
+/* Content section editor, top row with page selector and section heading, then two columns below */
+#admin-sections.editor-grid {
   display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: var(--meta-grid-spacing);
 }
 
+#top_row {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: var(--meta-grid-spacing);
+}
+
+#content_selection_left_column,
+#content_selection_right_column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--meta-grid-spacing);
+}
+
+#content_selection_left_column {
+  align-items: flex-start;
+}
+
+#content_selection_right_column {
+  align-items: flex-end;
+}
+
+.section-list {
+  width: 100%;
+  max-width: 400px;
+}
+
+/* info rows on meta page */
 .info-row {
   display: flex;
   gap: var(--meta-grid-spacing);

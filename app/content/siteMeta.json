@@ -21,7 +21,10 @@
   ],
   "open_graph": {
     "type": "website",
-    "site_name": "Bobby Ludlam"
+    "site_name": "Bobby Ludlam",
+    "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
+    "description": "Bobby Ludlam is an Austin comedian, writer, artist, and creator working across stand-up, film, and creative projects.",
+    "image": "images/bobby-ludlam-austin-1.jpg"
   },
   "twitter": {
     "card": "summary_large_image"
@@ -52,5 +55,6 @@
       "url": "https://allucanget.biz",
       "text": "for Bobby Ludlam. All rights reserved."
     }
-  }
+  },
+  "image": "images/bobby-ludlam-austin-1.jpg"
 }

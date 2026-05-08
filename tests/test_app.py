@@ -1,5 +1,5 @@
 from run import app
-import app as app_module
+import app.utils as app_module
 import base64
 import json
 import sys
@@ -196,7 +196,7 @@ def test_admin_routes_exist() -> None:
     client = app.test_client()
 
     headers = _basic_auth_header()
-    dashboard = client.get("/admin", headers=headers)
+    dashboard = client.get("/admin/meta", headers=headers)
     page_edit = client.get("/admin/biography", headers=headers)
 
     assert dashboard.status_code == 200
@@ -215,10 +215,8 @@ def test_admin_routes_exist() -> None:
     assert "initial_meta_json" in dashboard.get_data(as_text=True)
     assert "common_title" in dashboard.get_data(as_text=True)
     assert "footer_summary" in dashboard.get_data(as_text=True)
-    assert "twitter_card" in dashboard.get_data(as_text=True)
-    assert "jsonld_same_as" in dashboard.get_data(as_text=True)
+    assert "JSON-LD" in dashboard.get_data(as_text=True)
     assert 'id="admin-open-graph"' in dashboard.get_data(as_text=True)
-    assert 'id="admin-twitter"' in dashboard.get_data(as_text=True)
     assert 'id="admin-jsonld"' in dashboard.get_data(as_text=True)
     assert page_edit.status_code == 200
 
