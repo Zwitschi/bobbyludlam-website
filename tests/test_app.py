@@ -224,7 +224,7 @@ def test_admin_routes_exist() -> None:
 def test_admin_routes_require_auth() -> None:
     client = app.test_client()
 
-    dashboard = client.get("/admin")
+    dashboard = client.get("/admin/")
     save = client.post("/admin/save", data={"content_json": "{}"})
 
     assert dashboard.status_code == 401

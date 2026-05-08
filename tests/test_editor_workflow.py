@@ -20,7 +20,7 @@ def client():
 def test_editor_loads_json_into_memory(client):
     """Test that the admin page loads JSON content into memory."""
     headers = {"Authorization": "Basic YWRtaW46YWRtaW4="}
-    response = client.get("/admin", headers=headers)
+    response = client.get("/admin/", headers=headers)
     html = response.get_data(as_text=True)
 
     assert response.status_code == 200
@@ -31,7 +31,7 @@ def test_editor_loads_json_into_memory(client):
 def test_editor_displays_sections_list(client):
     """Test that the admin page displays sections list."""
     headers = {"Authorization": "Basic YWRtaW46YWRtaW4="}
-    response = client.get("/admin", headers=headers)
+    response = client.get("/admin/", headers=headers)
     html = response.get_data(as_text=True)
 
     assert response.status_code == 200
@@ -41,7 +41,7 @@ def test_editor_displays_sections_list(client):
 def test_editor_loads_section_into_editor(client):
     """Test that the admin page loads selected section into editor."""
     headers = {"Authorization": "Basic YWRtaW46YWRtaW4="}
-    response = client.get("/admin", headers=headers)
+    response = client.get("/admin/", headers=headers)
     html = response.get_data(as_text=True)
 
     assert response.status_code == 200
@@ -51,7 +51,7 @@ def test_editor_loads_section_into_editor(client):
 def test_editor_live_preview_updates(client):
     """Test that the admin page updates live preview."""
     headers = {"Authorization": "Basic YWRtaW46YWRtaW4="}
-    response = client.get("/admin", headers=headers)
+    response = client.get("/admin/", headers=headers)
     html = response.get_data(as_text=True)
 
     assert response.status_code == 200
