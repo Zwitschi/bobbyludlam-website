@@ -2,7 +2,7 @@
 
 ## Open Mic Odyssey
 
-![Open Mic Odyssey poster](https://www.openmicodyssey.com/images/trailer_thumbnail.png)
+![Open Mic Odyssey poster](https://openmicodyssey.com/images/trailer_thumbnail.png)
 
 Open Mic Odyssey is an upcoming feature film centered on three friends entering the unpredictable world of open mic comedy. Public descriptions connect Bobby Ludlam with Georg Sinn and Corey Pellizzi, positioning the project around friendship, performance, and the disorder that comes with chasing comedy seriously.
 
