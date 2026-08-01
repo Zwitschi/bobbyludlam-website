@@ -77,6 +77,109 @@
     "title": "Portfolio",
     "sections": [
       {
+        "heading": "Comedy",
+        "blocks": [
+          {
+            "type": "raw_html",
+            "html": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/lcNPESVxiHs\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>"
+          },
+          {
+            "type": "paragraph",
+            "segments": [
+              {
+                "type": "text",
+                "text": "Bobby has been pursuing stand-up comedy with increasing seriousness, recently moving to Austin and performing on stage for the first time at a Kill Tony Monday. He continues to develop his comedic voice through open mic appearances, video content, and creative experiments."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "segments": [
+              {
+                "type": "text",
+                "text": "Bobby has a public trail of comedy videos across various platforms, including YouTube channels that are currently inactive but contain material from different chapters of his creative journey. "
+              },
+              {
+                "type": "link",
+                "text": "See",
+                "url": "https://www.youtube.com/@ShobbyComedy"
+              },
+              {
+                "type": "text",
+                "text": " "
+              },
+              {
+                "type": "link",
+                "text": "all",
+                "url": "https://www.youtube.com/@BobbyLudlam-ql9ed"
+              },
+              {
+                "type": "text",
+                "text": " "
+              },
+              {
+                "type": "link",
+                "text": "channels",
+                "url": "https://www.youtube.com/@bobbyludlam2475"
+              },
+              {
+                "type": "text",
+                "text": " "
+              },
+              {
+                "type": "link",
+                "text": "here",
+                "url": "https://www.youtube.com/@blu301"
+              },
+              {
+                "type": "text",
+                "text": "."
+              }
+            ]
+          },
+          {
+            "type": "list",
+            "items": [
+              [
+                {
+                  "type": "link",
+                  "text": "Kill Tony ep#771 @ 1:41:55",
+                  "url": "https://www.youtube.com/watch?v=vyKU6Pd5KAA&start=6115"
+                }
+              ],
+              [
+                {
+                  "type": "link",
+                  "text": "Kill Tony ep#478 @ 41:29",
+                  "url": "https://www.youtube.com/watch?v=mNItVFGOwF4&start=2489"
+                }
+              ],
+              [
+                {
+                  "type": "link",
+                  "text": "Big Jay Oakerson & Dan Soder Clown me",
+                  "url": "https://www.youtube.com/watch?v=KNPCEiyG8NE"
+                }
+              ],
+              [
+                {
+                  "type": "link",
+                  "text": "Kill Tony Archive, ep#771",
+                  "url": "https://killtonyarchive.com/episodes/771"
+                }
+              ],
+              [
+                {
+                  "type": "link",
+                  "text": "Kill Archives, ep#478",
+                  "url": "https://www.killarchives.com/comedian/1231/bobby-ludlow?episode=478"
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
         "heading": "Open Mic Odyssey",
         "blocks": [
           {
@@ -159,92 +262,6 @@
                   "type": "link",
                   "text": "Support the project",
                   "url": "https://www.gofundme.com/f/support-bobby-ludlams-interdimensional-safe-space"
-                }
-              ]
-            ]
-          }
-        ]
-      },
-      {
-        "heading": "Comedy",
-        "blocks": [
-          {
-            "type": "raw_html",
-            "html": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/lcNPESVxiHs\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>"
-          },
-          {
-            "type": "paragraph",
-            "segments": [
-              {
-                "type": "text",
-                "text": "Bobby has been pursuing stand-up comedy with increasing seriousness, recently moving to Austin and performing on stage for the first time at a Kill Tony Monday. He continues to develop his comedic voice through open mic appearances, video content, and creative experiments."
-              }
-            ]
-          },
-          {
-            "type": "paragraph",
-            "segments": [
-              {
-                "type": "text",
-                "text": "Bobby has a public trail of comedy videos across various platforms, including YouTube channels that are currently inactive but contain material from different chapters of his creative journey. "
-              },
-              {
-                "type": "link",
-                "text": "See",
-                "url": "https://www.youtube.com/@ShobbyComedy"
-              },
-              {
-                "type": "text",
-                "text": " "
-              },
-              {
-                "type": "link",
-                "text": "all",
-                "url": "https://www.youtube.com/@BobbyLudlam-ql9ed"
-              },
-              {
-                "type": "text",
-                "text": " "
-              },
-              {
-                "type": "link",
-                "text": "channels",
-                "url": "https://www.youtube.com/@bobbyludlam2475"
-              },
-              {
-                "type": "text",
-                "text": " "
-              },
-              {
-                "type": "link",
-                "text": "here",
-                "url": "https://www.youtube.com/@blu301"
-              },
-              {
-                "type": "text",
-                "text": "."
-              }
-            ]
-          },
-          {
-            "type": "list",
-            "items": [
-              [
-                {
-                  "type": "link",
-                  "text": "Kill Tony Archive",
-                  "url": "https://www.killarchives.com/comedian/1231/bobby-ludlow?episode=478"
-                },
-                {
-                  "type": "text",
-                  "text": " (listed as \"Bobby Ludlow\")"
-                }
-              ],
-              [
-                {
-                  "type": "link",
-                  "text": "Big Jay Oakerson & Dan Soder Clown me",
-                  "url": "https://www.youtube.com/watch?v=KNPCEiyG8NE"
                 }
               ]
             ]
