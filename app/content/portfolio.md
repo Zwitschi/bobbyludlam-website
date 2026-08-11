@@ -2,7 +2,7 @@
 
 ## Comedy
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/lcNPESVxiHs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/KZcnEGG-WDw?si=HKPK1q2r4E3xFmyZ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 Bobby has been pursuing stand-up comedy with increasing seriousness, recently moving to Austin and performing on stage for the first time at a Kill Tony Monday. He continues to develop his comedic voice through open mic appearances, video content, and creative experiments.
 
