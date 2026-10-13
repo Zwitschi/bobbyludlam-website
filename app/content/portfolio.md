@@ -8,6 +8,7 @@ Bobby has been pursuing stand-up comedy with increasing seriousness, recently mo
 
 Bobby has a public trail of comedy videos across various platforms, including YouTube channels that are currently inactive but contain material from different chapters of his creative journey. [See](https://www.youtube.com/@ShobbyComedy) [all](https://www.youtube.com/@BobbyLudlam-ql9ed) [channels](https://www.youtube.com/@bobbyludlam2475) [here](https://www.youtube.com/@blu301).
 
+- [Kill Tony ep#789 @ 31:53](https://www.youtube.com/watch?v=ntTShp2YNlo&start=1913)
 - [Kill Tony ep#771 @ 1:41:55](https://www.youtube.com/watch?v=vyKU6Pd5KAA&start=6115)
 - [Kill Tony ep#478 @ 41:29](https://www.youtube.com/watch?v=mNItVFGOwF4&start=2489)
 - [Big Jay Oakerson & Dan Soder Clown me](https://www.youtube.com/watch?v=KNPCEiyG8NE)
