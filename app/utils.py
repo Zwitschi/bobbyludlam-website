@@ -89,7 +89,8 @@ def _render_content_markdown(content: dict[str, object]) -> dict[str, object]:
                         for block in blocks
                         if isinstance(block, dict)
                     )
-                    rendered_section["markdown_html"] = markdown.markdown(source)
+                    rendered_section["markdown_html"] = markdown.markdown(
+                        source)
                 rendered_sections.append(rendered_section)
             rendered_page["sections"] = rendered_sections
         rendered_pages[page_key] = rendered_page
@@ -189,10 +190,6 @@ def _default_site_meta() -> dict[str, object]:
         "jsonld": {
             "@context": "https://schema.org",
             "@type": "Person",
-            "sameAs": [
-                "https://www.instagram.com/thebobbyludlam/",
-                "https://bobbyludlam.com/",
-            ],
         },
         "footer": {
             "summary": "Bobby Ludlam - Austin comedian, writer, artist, and creator.",

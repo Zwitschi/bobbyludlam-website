@@ -30,18 +30,14 @@
     />
     {% endblock %} {% block meta_jsonld %}
     <script type="application/ld+json">
-      {
-        "@context": "{{ jsonld['@context'] }}",
-        "@type": "{{ jsonld['@type'] }}",
-        "name": "{{ common.title }}",
-        "description": "{{ common.description }}",
-        "image": "{{ url_for('static', filename=common.image, _external=True) }}",
-        "sameAs": [
-          {%- for url in jsonld.sameAs -%}
-          "{{ url }}"{% if not loop.last %},{% endif %}
-          {%- endfor -%}
-        ]
-      }
+      {{ {
+        "@context": jsonld["@context"],
+        "@type": jsonld["@type"],
+        "name": common.title,
+        "description": common.description,
+        "image": url_for("static", filename=common.image, _external=True),
+        "sameAs": common.social_links | map(attribute="url") | list
+      } | tojson }}
     </script>
     {% endblock %}
     <link

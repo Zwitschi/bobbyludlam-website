@@ -46,6 +46,9 @@ def test_homepage_renders_social_links_from_common_metadata(tmp_path, monkeypatc
         json.dumps(
             {
                 "common": {
+                    "title": "Bobby \"The Comedian\"",
+                    "description": "A creator <and> writer",
+                    "image": "images/social-profile.jpg",
                     "social_links": [
                         {
                             "label": "Custom Social",
@@ -71,6 +74,17 @@ def test_homepage_renders_social_links_from_common_metadata(tmp_path, monkeypatc
     social_nav = html.split('<nav class="social-nav"',
                             1)[1].split("</nav>", 1)[0]
     assert "thebobbyludlam" not in social_nav
+    head_html = html.split("</head>", 1)[0]
+    jsonld_source = head_html.split(
+        '<script type="application/ld+json">', 1)[1].split("</script>", 1)[0]
+    jsonld = json.loads(jsonld_source)
+
+    assert jsonld["@context"] == "https://schema.org"
+    assert jsonld["@type"] == "Person"
+    assert jsonld["name"] == 'Bobby "The Comedian"'
+    assert jsonld["description"] == "A creator <and> writer"
+    assert jsonld["image"] == "http://localhost/static/images/social-profile.jpg"
+    assert jsonld["sameAs"] == ["https://social.example/profile"]
 
 
 def test_homepage_renders_hero_content_from_json(tmp_path, monkeypatch) -> None:

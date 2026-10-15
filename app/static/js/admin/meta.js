@@ -20,7 +20,6 @@
   const twitterCard = document.getElementById("twitter_card");
   const jsonldContext = document.getElementById("jsonld_context");
   const jsonldType = document.getElementById("jsonld_type");
-  const jsonldSameAs = document.getElementById("jsonld_same_as");
   const footerSummary = document.getElementById("footer_summary");
   const footerLinks = document.getElementById("footer_links");
   const footerCopyrightYear = document.getElementById("footer_copyright_year");
@@ -91,7 +90,6 @@
 
     if (jsonldContext) jsonldContext.value = jsonld["@context"] || "";
     if (jsonldType) jsonldType.value = jsonld["@type"] || "";
-    if (jsonldSameAs) jsonldSameAs.value = (jsonld.sameAs || []).join("\n");
 
     if (footerSummary) footerSummary.value = footer.summary || "";
     if (footerLinks) footerLinks.value = footerLinksToText(footer.links || []);
@@ -148,7 +146,6 @@
     jsonld.name = commonTitleVal;
     jsonld.description = commonDescVal;
     jsonld.image = commonImageVal;
-    if (jsonldSameAs) jsonld.sameAs = normalizeLines(jsonldSameAs.value);
 
     if (footerSummary) footer.summary = footerSummary.value;
     if (footerLinks) footer.links = parseFooterLinks(footerLinks.value);
@@ -177,7 +174,6 @@
     twitterCard,
     jsonldContext,
     jsonldType,
-    jsonldSameAs,
     footerSummary,
     footerLinks,
     footerCopyrightYear,

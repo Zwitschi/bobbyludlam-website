@@ -44,11 +44,7 @@
   },
   "jsonld": {
     "@context": "https://schema.org",
-    "@type": "Person",
-    "sameAs": [
-      "https://www.instagram.com/thebobbyludlam/",
-      "https://bobbyludlam.com/"
-    ]
+    "@type": "Person"
   },
   "footer": {
     "summary": "Bobby Ludlam - Austin comedian, writer, artist, and creator.",
