@@ -13,6 +13,7 @@
   const commonTitle = document.getElementById("common_title");
   const commonDescription = document.getElementById("common_description");
   const commonImage = document.getElementById("common_image");
+  const commonSocialLinks = document.getElementById("common_social_links");
   const metaKeywords = document.getElementById("meta_keywords");
   const ogType = document.getElementById("og_type");
   const ogSiteName = document.getElementById("og_site_name");
@@ -79,6 +80,8 @@
     if (commonTitle) commonTitle.value = common.title || "";
     if (commonDescription) commonDescription.value = common.description || "";
     if (commonImage) commonImage.value = common.image || "";
+    if (commonSocialLinks)
+      commonSocialLinks.value = footerLinksToText(common.social_links || []);
     if (metaKeywords) metaKeywords.value = (metaData.keywords || []).join("\n");
 
     if (ogType) ogType.value = openGraph.type || "";
@@ -116,6 +119,8 @@
     if (commonTitle) common.title = commonTitle.value;
     if (commonDescription) common.description = commonDescription.value;
     if (commonImage) common.image = commonImage.value;
+    if (commonSocialLinks)
+      common.social_links = parseFooterLinks(commonSocialLinks.value);
 
     // Propagate common values to other sections
     const commonTitleVal = commonTitle?.value || "";
@@ -165,6 +170,7 @@
     commonTitle,
     commonDescription,
     commonImage,
+    commonSocialLinks,
     metaKeywords,
     ogType,
     ogSiteName,

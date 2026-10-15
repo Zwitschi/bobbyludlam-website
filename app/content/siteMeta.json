@@ -2,7 +2,13 @@
   "common": {
     "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
     "description": "Bobby Ludlam is an Austin comedian, writer, artist, and creator working across stand-up, film, and creative projects.",
-    "image": "images/bobby-ludlam-austin-1.jpg"
+    "image": "images/bobby-ludlam-austin-1.jpg",
+    "social_links": [
+      {
+        "label": "Instagram",
+        "url": "https://www.instagram.com/thebobbyludlam/"
+      }
+    ]
   },
   "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
   "description": "Bobby Ludlam is an Austin comedian, writer, artist, and creator working across stand-up, film, and creative projects.",

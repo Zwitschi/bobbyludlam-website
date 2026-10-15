@@ -40,6 +40,39 @@ def test_homepage_renders_content() -> None:
     assert "<!--" not in content_html
 
 
+def test_homepage_renders_social_links_from_common_metadata(tmp_path, monkeypatch) -> None:
+    meta_file = tmp_path / "siteMeta.json"
+    meta_file.write_text(
+        json.dumps(
+            {
+                "common": {
+                    "social_links": [
+                        {
+                            "label": "Custom Social",
+                            "url": "https://social.example/profile",
+                        }
+                    ]
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(app_module, "_site_meta_path", lambda _: meta_file)
+
+    response = app.test_client().get("/")
+    html = response.get_data(as_text=True)
+
+    assert response.status_code == 200
+    assert '<nav class="social-nav" aria-label="Social media links">' in html
+    assert (
+        '<a href="https://social.example/profile" target="_blank" '
+        'rel="noopener noreferrer">Custom Social</a>'
+    ) in html
+    social_nav = html.split('<nav class="social-nav"',
+                            1)[1].split("</nav>", 1)[0]
+    assert "thebobbyludlam" not in social_nav
+
+
 def test_homepage_renders_hero_content_from_json(tmp_path, monkeypatch) -> None:
     content_file = tmp_path / "siteContent.json"
     content_file.write_text(
@@ -235,6 +268,7 @@ def test_admin_routes_exist() -> None:
     assert 'href="#admin-footer"' in dashboard.get_data(as_text=True)
     assert "initial_meta_json" in dashboard.get_data(as_text=True)
     assert "common_title" in dashboard.get_data(as_text=True)
+    assert 'id="common_social_links"' in dashboard.get_data(as_text=True)
     assert "footer_summary" in dashboard.get_data(as_text=True)
     assert "JSON-LD" in dashboard.get_data(as_text=True)
     assert 'id="admin-open-graph"' in dashboard.get_data(as_text=True)

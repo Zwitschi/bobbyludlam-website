@@ -156,6 +156,12 @@ def _default_site_meta() -> dict[str, object]:
                 "working across stand-up, film, and creative projects."
             ),
             "image": "images/bobby-ludlam-austin-1.jpg",
+            "social_links": [
+                {
+                    "label": "Instagram",
+                    "url": "https://www.instagram.com/thebobbyludlam/",
+                },
+            ],
         },
         "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
         "description": (

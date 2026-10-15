@@ -7,6 +7,15 @@
     <a href="#{{ c }}">{% set d = content[c] %}{{ d.title }}</a>
     {% endfor %}
   </nav>
+  {% if site_meta.common.social_links %}
+  <nav class="social-nav" aria-label="Social media links">
+    {% for link in site_meta.common.social_links %}
+    {% if link.label and link.url and (link.url.startswith("https://") or link.url.startswith("http://")) %}
+    <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>
+    {% endif %}
+    {% endfor %}
+  </nav>
+  {% endif %}
   <p class="eyebrow">{{ hero.eyebrow }}</p>
   <h1>{{ hero.title }}</h1>
   <p class="intro">{{ hero.intro }}</p>

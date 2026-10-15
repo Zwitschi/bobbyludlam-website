@@ -192,6 +192,32 @@ button:focus-visible {
     0 0 18px rgba(34, 211, 238, 0.22);
 }
 
+.social-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.social-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--accent-lime);
+  border-radius: var(--radius-sm);
+  color: var(--accent-lime);
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.social-nav a:hover,
+.social-nav a:focus-visible {
+  background: rgba(190, 242, 100, 0.12);
+  color: #fff;
+}
+
 .eyebrow {
   margin: 0;
   text-transform: uppercase;
@@ -472,6 +498,15 @@ h3 {
     min-height: 44px;
     text-align: center;
     padding: 0.45rem 0.65rem;
+  }
+
+  .social-nav {
+    gap: 0.4rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .social-nav a {
+    min-height: 44px;
   }
 
   .portfolio-grid {
