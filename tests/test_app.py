@@ -87,6 +87,46 @@ def test_homepage_renders_social_links_from_common_metadata(tmp_path, monkeypatc
     assert jsonld["sameAs"] == ["https://social.example/profile"]
 
 
+def test_site_meta_drops_legacy_duplicate_fields() -> None:
+    prepared = app_module._prepare_site_meta(
+        {
+            "title": "Legacy title",
+            "description": "Legacy description",
+            "image": "legacy.jpg",
+            "open_graph": {
+                "type": "website",
+                "site_name": "Bobby Ludlam",
+                "title": "Legacy OG title",
+                "description": "Legacy OG description",
+                "image": "legacy-og.jpg",
+            },
+            "twitter": {
+                "card": "summary_large_image",
+                "title": "Legacy Twitter title",
+                "description": "Legacy Twitter description",
+                "image": "legacy-twitter.jpg",
+            },
+            "jsonld": {
+                "@context": "https://schema.org",
+                "@type": "Person",
+                "name": "Legacy JSON-LD name",
+                "description": "Legacy JSON-LD description",
+                "image": "legacy-jsonld.jpg",
+                "sameAs": ["https://example.com/old-profile"],
+            },
+        }
+    )
+
+    assert not {"title", "description", "image"} & prepared.keys()
+    assert not {"title", "description",
+                "image"} & prepared["open_graph"].keys()
+    assert not {"title", "description", "image"} & prepared["twitter"].keys()
+    assert not {"name", "description", "image",
+                "sameAs"} & prepared["jsonld"].keys()
+    assert prepared["open_graph"]["site_name"] == "Bobby Ludlam"
+    assert prepared["twitter"]["card"] == "summary_large_image"
+
+
 def test_homepage_renders_hero_content_from_json(tmp_path, monkeypatch) -> None:
     content_file = tmp_path / "siteContent.json"
     content_file.write_text(
@@ -146,29 +186,27 @@ def test_homepage_renders_footer_from_site_meta(tmp_path, monkeypatch) -> None:
                 "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
                 "description": "Meta description",
                 "keywords": ["Bobby Ludlam"],
-                "open_graph": {
+                "common": {
                     "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
                     "description": "Meta description",
+                    "image": "images/bobby-ludlam-austin-1.jpg",
+                    "social_links": [
+                        {
+                            "label": "Instagram",
+                            "url": "https://www.instagram.com/thebobbyludlam/",
+                        }
+                    ],
+                },
+                "open_graph": {
                     "type": "website",
                     "site_name": "Bobby Ludlam",
-                    "image": "images/bobby-ludlam-austin-1.jpg"
                 },
                 "twitter": {
                     "card": "summary_large_image",
-                    "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
-                    "description": "Meta description",
-                    "image": "images/bobby-ludlam-austin-1.jpg"
                 },
                 "jsonld": {
                     "@context": "https://schema.org",
                     "@type": "Person",
-                    "name": "Bobby Ludlam",
-                    "description": "Meta description",
-                    "image": "images/bobby-ludlam-austin-1.jpg",
-                    "sameAs": [
-                        "https://www.instagram.com/thebobbyludlam/",
-                        "https://bobbyludlam.com/"
-                    ]
                 },
                 "footer": {
                     "summary": "Custom footer summary.",
@@ -277,7 +315,7 @@ def test_admin_routes_exist() -> None:
         as_text=True)
     assert 'href="#admin-meta"' in dashboard.get_data(as_text=True)
     assert 'href="#admin-open-graph"' in dashboard.get_data(as_text=True)
-    assert 'href="#admin-twitter"' in dashboard.get_data(as_text=True)
+    assert 'href="#admin-twitter"' not in dashboard.get_data(as_text=True)
     assert 'href="#admin-jsonld"' in dashboard.get_data(as_text=True)
     assert 'href="#admin-footer"' in dashboard.get_data(as_text=True)
     assert "initial_meta_json" in dashboard.get_data(as_text=True)

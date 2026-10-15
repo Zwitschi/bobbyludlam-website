@@ -164,11 +164,6 @@ def _default_site_meta() -> dict[str, object]:
                 },
             ],
         },
-        "title": "Bobby Ludlam | Austin Comedian, Writer & Artist",
-        "description": (
-            "Bobby Ludlam is an Austin comedian, writer, artist, and creator "
-            "working across stand-up, film, and creative projects."
-        ),
         "keywords": [
             "Bobby Ludlam",
             "Bobby Something",
@@ -235,7 +230,22 @@ def _merge_nested_dict(defaults: dict[str, object], values: dict[str, object]) -
 
 
 def _prepare_site_meta(meta: dict[str, object]) -> dict[str, object]:
-    return _merge_nested_dict(_default_site_meta(), meta)
+    prepared = _merge_nested_dict(_default_site_meta(), meta)
+    for field in ("title", "description", "image"):
+        prepared.pop(field, None)
+
+    legacy_fields = {
+        "open_graph": ("title", "description", "image"),
+        "twitter": ("title", "description", "image"),
+        "jsonld": ("name", "description", "image", "sameAs"),
+    }
+    for section, fields in legacy_fields.items():
+        values = prepared.get(section)
+        if isinstance(values, dict):
+            for field in fields:
+                values.pop(field, None)
+
+    return prepared
 
 
 def _load_site_meta(app: Flask) -> dict[str, object]:

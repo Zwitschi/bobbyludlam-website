@@ -14,6 +14,9 @@ This repository contains the code for a Flask website, serving as an online port
   - [Run the Flask app](#run-the-flask-app)
   - [Generate a static site](#generate-a-static-site)
   - [Project structure](#project-structure)
+  - [Admin Interface](#admin-interface)
+    - [Content vs Metadata Editing](#content-vs-metadata-editing)
+    - [JSON-Backed Content Management](#json-backed-content-management)
   - [Deployment](#deployment)
     - [Netlify build settings](#netlify-build-settings)
 
@@ -110,7 +113,7 @@ The admin dashboard is split into three sections:
 | `/admin`         | Overview with links to each editor                               |
 | `/admin/content` | Edit hero copy and page sections                                 |
 | `/admin/gallery` | Upload images, edit captions, reorder, and delete gallery files  |
-| `/admin/meta`    | Edit metadata (basic, Open Graph, Twitter Card, JSON-LD, footer) |
+| `/admin/meta`    | Edit shared metadata, social links, Open Graph site info, keywords, and footer |
 
 Both pages share a persistent live preview panel and sidebar navigation. Authentication uses HTTP Basic Auth (username/password from `ADMIN_USERNAME`/`ADMIN_PASSWORD` env vars, default: `admin`/`admin`).
 
@@ -118,13 +121,15 @@ Both pages share a persistent live preview panel and sidebar navigation. Authent
 
 - **Content page** — hero fields and rich text section editor. Changes stored in `siteContent.json`.
 - **Gallery page** — image upload, caption editing, ordering, and deletion. Metadata is stored in `gallery.json`; files are stored in `app/static/images/`.
-- **Meta page** — title, description, keywords, social media metadata, structured data, footer copy. Changes stored in `siteMeta.json`.
+- **Meta page** — shared title, description, image, header social links, Open Graph site info, keywords, and footer copy. Changes are stored in `siteMeta.json`.
 
 Each page has its own save button. Saving content does not affect metadata dirty state and vice versa. The save button highlights amber with a pulse animation when unsaved changes exist.
 
 ### JSON-Backed Content Management
 
 All site content and metadata is stored in JSON files under `app/content/`. The admin UI provides a visual editor — no need to hand-edit source templates. Changes are held in-memory until explicitly saved via the save button. The live preview renders the current in-memory state without requiring a page reload.
+
+The `common` object in `siteMeta.json` is the source of shared title, description, image, and social links. Those values feed the page metadata and Person JSON-LD; `common.social_links` also supplies the header links and JSON-LD `sameAs` URLs. Open Graph type/site name and `twitter.card` remain separate values; the Twitter card defaults to `summary_large_image`.
 
 ## Deployment
 
