@@ -1,9 +1,11 @@
+import html
 import json
 import os
-from pathlib import Path
 from datetime import datetime, timezone
+from pathlib import Path
 
 from flask import current_app, Flask, Response, url_for
+import markdown
 from werkzeug.utils import secure_filename
 
 ALLOW_ROBOTS = True
@@ -58,6 +60,91 @@ def _prepare_site_content(content: dict[str, object]) -> dict[str, object]:
 
 def _load_site_content(app: Flask) -> dict[str, object]:
     return _prepare_site_content(_load_site_content_payload(app))
+
+
+def _render_content_markdown(content: dict[str, object]) -> dict[str, object]:
+    pages = content.get("pages", {})
+    if not isinstance(pages, dict):
+        return content
+
+    rendered_pages = {}
+    for page_key, page in pages.items():
+        if not isinstance(page, dict):
+            rendered_pages[page_key] = page
+            continue
+
+        rendered_page = dict(page)
+        sections = page.get("sections", [])
+        if isinstance(sections, list):
+            rendered_sections = []
+            for section in sections:
+                if not isinstance(section, dict):
+                    rendered_sections.append(section)
+                    continue
+                rendered_section = dict(section)
+                blocks = section.get("blocks", [])
+                if isinstance(blocks, list):
+                    source = "\n\n".join(
+                        _content_block_markdown(block)
+                        for block in blocks
+                        if isinstance(block, dict)
+                    )
+                    rendered_section["markdown_html"] = markdown.markdown(source)
+                rendered_sections.append(rendered_section)
+            rendered_page["sections"] = rendered_sections
+        rendered_pages[page_key] = rendered_page
+
+    return {**content, "pages": rendered_pages}
+
+
+def _content_block_markdown(block: dict[str, object]) -> str:
+    block_type = block.get("type")
+    if block_type == "paragraph":
+        segments = block.get("segments", [])
+        if not isinstance(segments, list):
+            return ""
+        return "".join(
+            _content_segment_markdown(segment)
+            for segment in segments
+            if isinstance(segment, dict)
+        )
+    if block_type == "list":
+        items = block.get("items", [])
+        if not isinstance(items, list):
+            return ""
+        list_items = []
+        for item in items:
+            if isinstance(item, list):
+                item_content = "".join(
+                    _content_segment_markdown(segment)
+                    for segment in item
+                    if isinstance(segment, dict)
+                )
+                list_items.append(f"<li>{item_content}</li>")
+        return f'<ul class="content-list">{"".join(list_items)}</ul>'
+    if block_type == "image":
+        src = html.escape(str(block.get("src", "")), quote=True)
+        alt = html.escape(str(block.get("alt", "")), quote=True)
+        return (
+            '<figure class="content-figure">'
+            f'<img class="content-image" src="{src}" alt="{alt}" loading="lazy" />'
+            f"<figcaption>{alt}</figcaption></figure>"
+        )
+    if block_type == "raw_html":
+        return str(block.get("html", ""))
+    return ""
+
+
+def _content_segment_markdown(segment: dict[str, object]) -> str:
+    text = html.escape(str(segment.get("text", "")))
+    if segment.get("type") != "link":
+        return text
+
+    url = html.escape(str(segment.get("url", "")), quote=True)
+    external_attributes = (
+        ' target="_blank" rel="noopener noreferrer"' if "http" in url else ""
+    )
+    return f'<a href="{url}"{external_attributes}>{text}</a>'
 
 
 def _default_site_meta() -> dict[str, object]:

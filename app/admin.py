@@ -3,6 +3,8 @@ from .utils import (
     _admin_unauthorized,
     _is_admin_authenticated,
     _load_site_content_payload,
+    _prepare_site_content,
+    _render_content_markdown,
     _load_site_meta,
     _save_site_content,
     _save_site_meta,
@@ -136,8 +138,7 @@ def admin_preview() -> Response | tuple[str, int]:
     except Exception as exc:
         return Response(f"Invalid JSON: {exc}", status=400, mimetype="text/plain")
 
-    from .utils import _prepare_site_content
-    site_content = _prepare_site_content(payload)
+    site_content = _render_content_markdown(_prepare_site_content(payload))
     html = render_template(
         "index.html",
         content=site_content["pages"],

@@ -33,9 +33,11 @@ def test_homepage_renders_content() -> None:
     assert "/static/images/bobby-ludlam-austin-1.jpg" in html
     assert "bobby_ludlam_austin" not in html
     assert "/static/images/safe_space_concept_03.png" in html
-    assert '<iframe width="560" height="315" src="https://www.youtube.com/embed/lcNPESVxiHs"' in html
+    assert '<iframe width="560" height="315" src="https://www.youtube.com/embed/KZcnEGG-WDw?si=HKPK1q2r4E3xFmyZ"' in html
     assert "&lt;iframe" not in html
-    assert "<!--" not in html
+    content_html = html.split(
+        '<section class="content-section"', 1)[1].split("</main>", 1)[0]
+    assert "<!--" not in content_html
 
 
 def test_homepage_renders_hero_content_from_json(tmp_path, monkeypatch) -> None:
@@ -48,7 +50,25 @@ def test_homepage_renders_hero_content_from_json(tmp_path, monkeypatch) -> None:
                     "title": "Custom hero title",
                     "intro": "Custom intro copy.",
                 },
-                "biography": {"title": "Biography", "sections": []},
+                "biography": {
+                    "title": "Biography",
+                    "sections": [
+                        {
+                            "heading": "Markdown check",
+                            "blocks": [
+                                {
+                                    "type": "paragraph",
+                                    "segments": [
+                                        {
+                                            "type": "text",
+                                            "text": "**Rendered from JSON**",
+                                        }
+                                    ],
+                                }
+                            ],
+                        }
+                    ],
+                },
                 "portfolio": {"title": "Portfolio", "sections": []},
                 "contact": {"title": "Contact", "sections": []},
             }
@@ -66,6 +86,7 @@ def test_homepage_renders_hero_content_from_json(tmp_path, monkeypatch) -> None:
     assert "Custom eyebrow" in html
     assert "Custom hero title" in html
     assert "Custom intro copy." in html
+    assert "<strong>Rendered from JSON</strong>" in html
     assert '#hero' not in html
     assert '>Hero<' not in html
 

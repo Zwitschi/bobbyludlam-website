@@ -1,13 +1,18 @@
 from flask import Blueprint, Response, render_template, request, current_app
 
-from .utils import _load_site_content, _create_robots_txt, static_files
+from .utils import (
+    _load_site_content,
+    _render_content_markdown,
+    _create_robots_txt,
+    static_files,
+)
 
 pages_bp = Blueprint('pages', __name__)
 
 
 @pages_bp.get("/")
 def index() -> str:
-    site_content = _load_site_content(current_app)
+    site_content = _render_content_markdown(_load_site_content(current_app))
     return render_template(
         "index.html",
         content=site_content["pages"],

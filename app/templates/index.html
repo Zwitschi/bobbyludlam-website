@@ -1,16 +1,6 @@
 {% extends "_base.html" %}
 
 {% block content %}
-{% macro render_segments(segments) -%}
-  {%- for segment in segments -%}
-    {%- if segment["type"] == "text" -%}
-      {{ segment["text"] }}
-    {%- elif segment["type"] == "link" -%}
-      <a href="{{ segment["url"] }}"{% if "http" in segment["url"] %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ segment["text"] }}</a>
-    {%- endif -%}
-  {%- endfor -%}
-{%- endmacro %}
-
 <header class="hero">
   <nav class="section-nav" aria-label="Section navigation">
     {% for c in content %}
@@ -33,24 +23,7 @@
   {% for section in c.sections %}
   <article class="content-block">
     <h3>{{ section.heading }}</h3>
-    {% for block in section.blocks %}
-      {% if block["type"] == "paragraph" %}
-        <p>{{ render_segments(block["segments"]) | safe }}</p>
-      {% elif block["type"] == "raw_html" %}
-        {{ block["html"] | safe }}
-      {% elif block["type"] == "image" %}
-        <figure class="content-figure">
-          <img class="content-image" src="{{ block["src"] }}" alt="{{ block["alt"] }}" loading="lazy" />
-          <figcaption>{{ block["alt"] }}</figcaption>
-        </figure>
-      {% elif block["type"] == "list" %}
-        <ul class="content-list">
-          {% for item in block["items"] %}
-            <li>{{ render_segments(item) | safe }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endfor %}
+    {{ section.markdown_html | safe }}
   </article>
   {% endfor %}
 </section>
